@@ -63,13 +63,14 @@ class User extends Authenticatable
         return $this->user_type === 'staff';
     }
 
-    // public function isManager()
-    // {
-    //     return $this->user_type === 'manager';
-    // }
     public function isSuperAdmin()
     {
         return $this->user_type === 'super_admin';
+    }
+    public function getCreatedAtAttribute($value)
+    {
+        //DD-MM-YYYY, TIME am/pm 
+        return date('d-m-Y, h:i A', strtotime($value));
     }
 
 }

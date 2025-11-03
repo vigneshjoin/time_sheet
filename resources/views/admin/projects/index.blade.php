@@ -6,6 +6,19 @@
 @section('inner_page_subtitle', 'Projects Management')
 @section('inner_page_title2', 'Projects List')
 
+@php
+	$user = Auth::user();
+	$user_type = $user->user_type;
+	if($user_type == 'admin' || $user_type == 'super_admin' ){
+		$type = 'true';
+		$viewType = 'false';
+	}else{
+		$type = 'false';	
+		$viewType = 'true';
+
+	}
+@endphp
+
 <!-- inner section -->
  <!-- add user button  -->
   @section('inner_button_section')
@@ -24,9 +37,9 @@
 				:fields="[ 'project_id', 'project_name', 'status', 'actions']" 
 				:rows="$ProjectModel"
 				module='projects'
-				edit="true"
-                preview="false"
-                delete="true"
+				edit="{{ $type }}"
+                preview="{{ $viewType }}"
+                delete="{{ $type }}"
 			/>
 
 			<!--Model box  -->

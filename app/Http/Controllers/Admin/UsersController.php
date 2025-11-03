@@ -18,12 +18,12 @@ class UsersController extends Controller
     { 
         // i need to show all users pass to list view i'm use data table so just return view
         // $users = User::all();
-        $users = User::select('id', 'name', 'email', 'hourly_charges', 'created_at')->get();
+        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->get();
         return view('admin.users.index', compact('users'));
     }
 
     function list(){
-        $users = User::select('id', 'name', 'email', 'hourly_charges', 'created_at')->get();
+        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->get();
         return response()->json(['data' => $users]);
     }
 
@@ -57,6 +57,8 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            // i need to get login user id 
+            $loggedInUserId = Auth::id();
             $user = User::find($id);
             if (! $user) {
                 return response()->json([
@@ -104,7 +106,11 @@ class UsersController extends Controller
             $user->staff_id = $request->input('staff_id');
             $user->email = $request->input('email');
             $user->hourly_charges = $request->input('hourly_charges') !== null ? $request->input('hourly_charges') : $user->hourly_charges;
-            $user->status = $request->input('status');
+            
+            if($loggedInUserId != $id ) {
+                $user->status = $request->input('status');
+            }
+            
             $user->user_type = $request->input('user_type');
 
             $user->save();

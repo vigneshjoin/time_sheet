@@ -33,8 +33,8 @@
 
 			<x-table 
 				title="Project List" 
-				:headers="['S.No', 'Project Code', 'Project Name', 'Status', 'Actions']" 
-				:fields="[ 'project_id', 'project_name', 'status', 'actions']" 
+				:headers="['S.No', 'Project Code', 'Project Start date', 'Project Due date', 'Project Name', 'Status', 'Actions']" 
+				:fields="[ 'project_id', 'start_date', 'due_date', 'project_name', 'status', 'actions']" 
 				:rows="$ProjectModel"
 				module='projects'
 				edit="{{ $type }}"

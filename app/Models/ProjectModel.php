@@ -41,4 +41,20 @@ class ProjectModel extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    // start_date format
+    public function getStartDateAttribute($value)
+    {
+        return date('d-m-Y, h:i A', strtotime($value));
+    }
+    // due_date format
+    public function getDueDateAttribute($value)
+    {
+        return date('d-m-Y, h:i A', strtotime($value));
+    }
+
+    public function getEntryDateAttribute($value)
+    {
+        return date('d-m-Y, h:i A', strtotime($value));
+    }
 }

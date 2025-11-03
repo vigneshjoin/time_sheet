@@ -45,7 +45,12 @@ class TimesheetModel extends Model
      */
     public function getEntryDateAttribute($value)
     {
-        return \Carbon\Carbon::parse($value)->format('d-m-Y');
+        return date('d-m-Y, h:i A', strtotime($value));
     }
 
+    public function getCreatedAtAttribute($value)
+    {
+        //DD-MM-YYYY, TIME am/pm 
+        return date('d-m-Y, h:i A', strtotime($value));
+    }
 }

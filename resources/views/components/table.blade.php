@@ -3,8 +3,13 @@
     'headers' => [],
     'fields'  => [],
     'rows'    => [],
-    'module'  => ''   {{-- default value to avoid undefined variable --}}
+    'module'  => '',   {{-- default value to avoid undefined variable --}}
+    'edit'  => ''   ,
+    'preview'  => '' , 
+    'delete'  => ''   
 ])
+
+
 
 <div class="card">
 	<!-- <div class="card-header">
@@ -31,14 +36,21 @@
 								<td>
 									@if($field === 'actions')
 										<div class="d-flex align-items-center gap-1">
+                                           
+                                                @if($edit === 'true')
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="edit-Id btn btn-icon btn-sm btn-info-light" data-bs-toggle="tooltip" title="Edit" data-user-id="{{ $row->id }}" >
+                                                        <i class="ti ti-edit fs-14"></i>
+                                                    </a>
+                                                @endif
 
-
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="edit-Id btn btn-icon btn-sm btn-info-light" data-bs-toggle="tooltip" title="Edit" data-user-id="{{ $row->id }}" >
-                                                <i class="ti ti-edit fs-14"></i>
-                                            </a>
+                                                @if($preview === 'true')
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="edit-Id btn btn-icon btn-sm btn-info-light" data-bs-toggle="tooltip" title="Preview" data-user-id="{{ $row->id }}" >
+                                                        <i class="ti ti-eye fs-14"></i>
+                                                    </a>
+                                                @endif
+                                            
                                             <!-- module -->
-
-                                            @if(isset( $module ) && $module === 'users')
+                                            @if(isset( $module ) && $module === 'users' && isset($delete) && $delete === 'true' )
                                                 
 
                                                 <form action="{{ route('admin.users.destroy', $row->id) }}" 
@@ -55,7 +67,7 @@
                                                     </button>
                                                 </form>
 
-                                                @elseif(isset( $module ) && $module === 'projects')
+                                                @elseif(isset( $module ) && $module === 'projects' && isset($delete) && $delete === 'true')
                                                     <form action="{{ route('admin.projects.destroy', $row->id) }}" method="POST" class="d-inline-block">
                                                         @csrf
                                                         @method('DELETE')
@@ -68,7 +80,7 @@
                                                         </button>
                                                     </form>
 
-                                                @elseif(isset( $module ) && $module === 'timesheet')
+                                                @elseif(isset( $module ) && $module === 'timesheet'  && isset($delete) && $delete === 'true')
                                                     <form action="{{ route('admin.timesheet.destroy', $row->id) }}" method="POST" class="d-inline-block">
                                                         @csrf
                                                         @method('DELETE')
@@ -82,13 +94,6 @@
                                                     </form>
                                                 
                                                 @endif
-                                           
-
-                                            <!-- @if($module === 'projects') -->
-
-                                                
-                                            <!-- @endif -->
-
                                             
                                         </div>
 									@elseif($val instanceof \Illuminate\Support\Carbon)

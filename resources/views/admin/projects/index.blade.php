@@ -24,28 +24,47 @@
 				:fields="[ 'project_id', 'project_name', 'status', 'actions']" 
 				:rows="$ProjectModel"
 				module='projects'
+				edit="true"
+                preview="false"
+                delete="true"
 			/>
 
 			<!--Model box  -->
 			@include('admin.projects.create')
-
-			 
 
 		@endsection
 		
 	@section('scripts')
 		<!-- -- ensure jQuery + validation + toastr are loaded before custom scripts - -->
 			@include('admin.layouts.validation-links')
+			<!-- Select2 JS (for multi-select) -->
+			<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 			<!-- Custom JS -->
 			<script src="{{ asset('assets/js/admin-project/project.js') }}"></script>
+
+			<script>
+				// Initialize Select2 when the modal is shown and destroy on hide to avoid duplicates
+				$(document).ready(function() {
+					$('#model_item').on('shown.bs.modal', function () {
+						if ( $.fn.select2 ) {
+							$('#project_users').select2({
+								dropdownParent: $('#model_item'),
+								placeholder: 'Select users',
+								allowClear: true,
+								width: '100%'
+							});
+						}
+					});
+				});
+			</script>
 	@endsection
 
 
 @push('styles')
-    <!-- Font Awesome -->
-    <!-- <link rel="stylesheet" href="{{ asset('assets/webfonts/css/all.min.css') }}"> -->
     <!-- Toastr -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 
 

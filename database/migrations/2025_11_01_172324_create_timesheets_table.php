@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id(); // Auto increment ID
+            $table->unsignedBigInteger('user_id'); // ID of the user who logged the timesheet
             $table->string('project_id'); // You can make this foreignId if it links to projects table
             $table->string('staff_id')->nullable(); // You can make this foreignId if it links to users table
             $table->date('entry_date'); // Date field

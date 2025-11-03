@@ -45,9 +45,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/timesheet/{timesheet}/edit', [TimesheetController::class, 'edit'])->name('admin.timesheet.edit');
             Route::put('/timesheet/{timesheet}', [TimesheetController::class, 'update'])->name('admin.timesheet.update');
             Route::delete('/timesheet/{timesheet}', [TimesheetController::class, 'destroy'])->name('admin.timesheet.destroy');
-        // Projects Management Routes
-        
+        // Timesheet Management Routes
     });
+
 
     // SUPER ADMIN ROUTES
     Route::middleware('user_type:super_admin,admin')->group(function () {
@@ -61,7 +61,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('admin.users.edit');
             Route::put('/users/{user}', [UsersController::class, 'update'])->name('admin.users.update');
             Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('admin.users.destroy');
+
+            Route::get('/admin/timesheet', [TimesheetController::class, 'timesheetlists'])->name('admin.timesheet.adminlist');
+            Route::get('/admin/timesheet/{timesheet}/edit', [TimesheetController::class, 'adminEdit'])->name('admin.timesheet.adminEdit');
+
         // User Management Routes
+    });
+
+
+
+     Route::middleware('user_type:super_admin,admin,staff')->group(function () {
 
         // Projects Management Routes
             Route::get('/projects', [ProjectController::class, 'index'])->name('admin.projects.index');
@@ -73,8 +82,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('admin.projects.update');
             Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy');
         // Projects Management Routes
-
-    });
+     });
 
     Route::get('/logout',  [AdminAuthController::class, 'logout']);
 });

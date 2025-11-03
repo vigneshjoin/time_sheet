@@ -23,6 +23,9 @@
 				:fields="['name', 'email', 'hourly_charges', 'created_at', 'actions']" 
 				:rows="$users"
 				module='users'
+				edit="true"
+                preview="false"
+                delete="true"
 			/>
 
 			<!--Model box  -->

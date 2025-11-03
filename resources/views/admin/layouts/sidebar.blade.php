@@ -31,14 +31,21 @@
 							<li class="menu-item">
 								<a href="{{ route('admin.users.index') }}" >
 									<i class="ti ti-users" style="margin-right: 5px;"></i> 
-									<span> User Management</span>
+									<span> Users Management</span>
 								</a>
 							</li>
 
 							<li class="menu-item">
 								<a href="{{ route('admin.projects.index') }}">
 									<i class="ti ti-briefcase" style="margin-right: 5px;"></i> 
-									<span> Project Management</span>
+									<span> Projects Management</span>
+								</a>
+							</li>
+
+							<li class="menu-item">
+								<a href="{{ route('admin.timesheet.adminlist') }}">
+									<i class="ti ti-clock" style="margin-right: 5px;"></i> 
+									<span> Time sheet logs</span>
 								</a>
 							</li>
 

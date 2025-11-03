@@ -12,7 +12,7 @@ $(function() {
             console.warn('CSRF token not found in meta tag or hidden input.');
         }
     })();
-	
+
     // Form validation  SubmitBtn
     $(document).on('click', '.create-mode', function() { 
         console.info('create mode clicked');
@@ -22,56 +22,50 @@ $(function() {
                 ignore: [],
                 rules: {
                     project_id: {
+                        required: true
+                    },
+                    user_id: {
                         required: true,
-                        minlength: 3
+                        digits: true
                     },
-                    // for multiple select named project_users[] use exact name
-                    'project_users[]': {
-                        required: true,
-                        minlength: 1
-                    },
-                    project_name: {
-                        required: true,
-                        minlength: 3
-                    },
-                    description: {
-                        maxlength: 500
-                    },
-                    start_date: {
+                    entry_date: {
                         required: true,
                         date: true
                     },
-                    due_date: {
+                    hours_spent: {
                         required: true,
-                        date: true
+                        number: true,
+                        min: 0.1
+                    },
+                    notes: {
+                        maxlength: 1000
                     },
                     status: {
                         required: true
                     }
                 },
                 messages: {
-                    project_id: {
-                        required: "Please enter project ID",
-                        minlength: "Project ID must be at least 3 characters"
+                    project_code: {
+                        required: "Please enter a project ID"
                     },
-                    'project_users[]': "Please select at least one user",
-                    project_name: {
-                        required: "Please enter project name",
-                        minlength: "Project name must be at least 3 characters"
+                    staff_id: {
+                        required: "Please select a user",
+                        digits: "User ID must be a valid number"
                     },
-                    description: {
-                        maxlength: "Description cannot exceed 500 characters"
-                    },
-                    start_date: {
-                        required: "Please select a start date",
+                    entry_date: {
+                        required: "Please select the entry date",
                         date: "Please enter a valid date"
                     },
-                    due_date: {
-                        required: "Please select a due date",
-                        date: "Please enter a valid date"
+                    hours_spent: {
+                        required: "Please enter hours spent",
+                        number: "Please enter a valid number (e.g., 1.5 for 1½ hours)",
+                        min: "Hours spent must be 0 or more"
+                    },
+                    notes: {
+                        maxlength: "Notes cannot exceed 1000 characters"
                     },
                     status: {
-                        required: "Please select a project status"
+                        required: "Please select status (Active or Inactive)"
                     }
                 },
                 errorElement: 'span',
@@ -102,7 +96,7 @@ $(function() {
                                 toastr.success('Created successfully');
                                 form.reset();
                                 // refresh page 
-                                // window.location.reload();
+                                window.location.reload();
                             }else{
                                 toastr.error('Something went wrong!');
                                 toastr.error('Please check the form for errors and try again.',toastr.error);
@@ -131,26 +125,24 @@ $(function() {
         $("#SubmitBtn").removeClass('edit-mode');
        document.getElementById("CreateForm").reset();
        $('#SubmitBtn').empty().html('Create');
-       $('.modal-title').empty().html('Create');
+    //    $('.modal-title').empty().html('Create');
        clearValidationErrors('#CreateForm');
+
+        setTimeout(function(){ 
+            let entryDate = document.getElementById("entry_date");
+            if (entryDate) {
+                let today = new Date();
+                let yyyy = today.getFullYear();
+                let mm = String(today.getMonth() + 1).padStart(2, '0');
+                let dd = String(today.getDate()).padStart(2, '0');
+                entryDate.value = `${yyyy}-${mm}-${dd}`;
+            }
+        }, 3000);
+
     });
 
-    // Initialize select2 when modal opens
-    // Ensure select2 is initialized when modal opens and selection changes propagate
-//     $('#model_item').on('shown.bs.modal', function () {
-// 	// init select2 if available
-// 	if ($.fn.select2 && !$('#project_users').data('select2')) {
-// 		$('#project_users').select2({
-// 			dropdownParent: $('#model_item'),
-// 			placeholder: 'Select users',
-// 			allowClear: true,
-// 			width: '100%'
-// 		});
-// 	}
-// 	// propagate change to update UI (use select2-specific event if present)
-// 	$('#project_users').trigger('change');
-// });
-
+    
+   
     //userId when model will be open i need to trigger get users by user id ajax 
     $(document).on('click', '.edit-Id', function() { 
         $("#SubmitBtn").removeClass('create-mode');
@@ -158,52 +150,29 @@ $(function() {
         var Id = $(this).data('user-id');
         $(".password-field").hide();
         $('#SubmitBtn').empty().html('Update');
-        $('.modal-title').empty().html('Update');
+        // $('.modal-title').empty().html('Update');
         clearValidationErrors('#CreateForm');
         // Trigger AJAX request to get user details
         $.ajax({
-            url: 'projects/' + Id + '/edit',
+            url: 'timesheet/' + Id + '/edit',
             type: 'GET',
             success: function(response) {
                 console.info('details retrieved:', response);
-                $('#project_id').val(response.data.project_id);
-                $('#project_name').val(response.data.project_name);
-                $('#description').val(response.data.description);
-                // Robustly bind project_users (handles array or JSON-string)
-                var ids = [];
-                if (Array.isArray(response.data.user_ids)) {
-                    ids = response.data.user_ids;
-                } else if (Array.isArray(response.data.users)) {
-                    ids = response.data.users;
-                } else if (typeof response.data.user_ids === 'string' && response.data.user_ids.trim() !== '') {
-                    try {
-                        var parsed = JSON.parse(response.data.user_ids);
-                        if (Array.isArray(parsed)) ids = parsed;
-                    } catch (e) {
-                        ids = response.data.user_ids.replace(/[\[\]\s"']/g, '').split(',').filter(Boolean);
-                    }
-                }
-                // normalize to strings (option values may be strings)
-                ids = ids.map(function(v){ return String(v); });
-                // set the select values
-                $('#project_users').val(ids);
-                // ensure DOM options are selected (some browsers/plugins require this)
-                $('#project_users option').each(function() {
-                    $(this).prop('selected', ids.indexOf(String($(this).val())) !== -1);
-                });
-                // trigger change so UI (and select2 if present) updates
-                $('#project_users').trigger('change');
-
-                var dateString = response.data.start_date;
-                var start_date = dateString ? dateString.split("T")[0] : "";
-                $("#start_date").val(start_date);
-
-                var dueDate = response.data.due_date;
-                var toDate = dueDate ? dueDate.split("T")[0] : "";
-                $("#due_date").val(toDate);
-
+                // Populate the modal with user details
+                
+                
+                $('input[name="staff_id"]').val(response.data.staff_id);
+                
+                $('#hours_spent').val(response.data.hours_spent);
+                $('#notes').val(response.data.notes);
                 $('#status').val(response.data.status);
-                $('#edit_project_id').val(response.data.id);
+                let parts = response.data.entry_date.split('-'); // ["03", "12", "2026"]
+                let formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // 2026-12-03
+                $("#entry_date").val(formattedDate);
+                $('#edit_timesheet_id').val(response.data.id);
+                console.info('Project ID:', response.data.project_id);
+                $('#project_code').val(response.data.project_id);
+
             },
             error: function(xhr) {
                 toastr.error('Failed to retrieve details.');
@@ -231,7 +200,7 @@ $(function() {
         }
 
         $.ajax({
-            url: $("#edit_action_url").val().replace(':id', $('#edit_project_id').val()),
+            url: $("#edit_action_url").val().replace(':id', $('#edit_timesheet_id').val()),
             type: 'POST', // use POST with _method=PUT (method spoofing)
             data: formData,
             processData: false,
@@ -240,7 +209,7 @@ $(function() {
                 if (response.status == 'success') {
                     toastr.success('User updated successfully');
                     formEl.reset();
-                    // window.location.reload();
+                    window.location.reload();
                 } else {
                     toastr.error('Please check the form for errors and try again.');
                 }
@@ -267,4 +236,5 @@ function clearValidationErrors(id) {
     $('span.error-text').text('');
     $(id).find('.is-invalid').removeClass('is-invalid');
 }
+
 

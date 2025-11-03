@@ -68,7 +68,10 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
+        //user_ids  this field i need to send as json decode
         $Project = ProjectModel::find($id);
+
+
         if (! $Project) {
             return response()->json([
                 'status' => 'error',
@@ -76,9 +79,13 @@ class ProjectController extends Controller
             ], 404);
         }
 
+        // ensure user_ids returned as array
+        $projectData = $Project->toArray();
+        $projectData['user_ids'] = $Project->user_ids ? json_decode($Project->user_ids, true) : [];
+
         return response()->json([
             'status' => 'success',
-            'data' => $Project,
+            'data' => $projectData,
         ], 200);
     }
 
@@ -119,17 +126,21 @@ class ProjectController extends Controller
             // Update fields
             $project->project_id   = $request->project_id;
             $project->project_name = $request->project_name;
-            $project->user_ids    = $request->project_users;
+            $project->user_ids    = json_encode($request->project_users);
             $project->description  = $request->description;
             $project->start_date   = $request->start_date;
             $project->due_date     = $request->due_date;
             $project->status       = $request->status;
             $project->save();
 
+            // Return project with user_ids as array
+            $projectData = $project->toArray();
+            $projectData['user_ids'] = $project->user_ids ? json_decode($project->user_ids, true) : [];
+
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Project updated successfully.',
-                'data'    => $project,
+                'data'    => $projectData,
             ], 200);
 
         } catch (Exception $e) {
@@ -182,19 +193,22 @@ class ProjectController extends Controller
             // Create project record
             $project = ProjectModel::create([
                 'project_id'   => $request->project_id,
+                'user_ids'     => json_encode($request->project_users),
                 'project_name' => $request->project_name,
-                'project_users' => $request->project_users,
                 'description'  => $request->description,
                 'start_date'   => $request->start_date,
                 'due_date'     => $request->due_date,
                 'status'       => $request->status,
             ]);
 
-            // Return success response
+            // Return created project with user_ids decoded as array
+            $projectData = $project->toArray();
+            $projectData['user_ids'] = $project->user_ids ? json_decode($project->user_ids, true) : [];
+
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Project created successfully.',
-                'data'    => $project,
+                'data'    => $projectData,
             ], 200);
 
         } catch (Exception $e) {

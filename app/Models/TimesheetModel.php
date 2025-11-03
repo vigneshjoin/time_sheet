@@ -24,6 +24,7 @@ class TimesheetModel extends Model
         'id',
         'project_id',
         'staff_id',
+        'user_id',
         'entry_date',
         'hours_spent',
         'notes',

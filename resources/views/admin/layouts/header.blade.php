@@ -36,9 +36,6 @@
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/fontawesome.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/all.min.css') }}">
 	
-
-	<link rel="stylesheet" href="{{ asset('admin/assets/css/all.min.css') }}">
-
 	 <!-- Color Picker Css -->
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/flatpickr.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/nano.min.css') }}">
@@ -63,6 +60,8 @@
 
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/style-min.css') }}">
+
+	<link rel="stylesheet" href="{{ asset('admin/assets/css/custom-style.css') }}">
 
 </head>
 

@@ -47,7 +47,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="project_users" class="form-label">Assign Users <span class="text-danger">*</span></label>
-                                <select class="form-select form-select-md select2" 
+                                <select style="" class="form-select form-select-md select2" 
                                         id="project_users" 
                                         name="project_users[]" 
                                         multiple

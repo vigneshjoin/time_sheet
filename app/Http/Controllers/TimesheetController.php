@@ -26,6 +26,7 @@ class TimesheetController extends Controller
         $Timesheet = TimesheetModel::select(
                         'id',
                         'project_id',
+                        'user_id',
                         'staff_id',
                         'entry_date',
                         'hours_spent',
@@ -39,6 +40,30 @@ class TimesheetController extends Controller
         return view('admin.timesheet.index', compact('Timesheet','user', 'projects'));
     }
 
+    public function timesheetlists()
+    {
+        $user = Auth::user();
+        $projects = ProjectModel::select(
+                            'project_id',
+                            'project_name',
+                            'user_ids',
+                            'description',
+                            'start_date',
+                            'due_date',
+                            'status')
+                            ->get();
+
+        $Timesheet = TimesheetModel::with('user:id,name') // eager load only id + name
+            ->select('id','project_id','user_id','staff_id','entry_date','hours_spent','status')
+            ->get()
+            ->transform(function ($item) {
+                $item->status = ucfirst($item->status);
+                $item->user_name = $item->user->name ?? 'N/A'; // Add user name column
+                return $item;
+            });
+
+        return view('admin.timesheet.adminindex', compact('Timesheet', 'user', 'projects'));
+    }
 
 
     public function list()
@@ -68,6 +93,22 @@ class TimesheetController extends Controller
      */
     public function edit($id)
     {
+        $Timesheet   = TimesheetModel::find($id);
+        if (! $Timesheet) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Timesheet not found.'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $Timesheet,
+        ], 200);
+    }
+
+    function adminEdit($id)
+    { 
         $Timesheet   = TimesheetModel::find($id);
         if (! $Timesheet) {
             return response()->json([
@@ -182,6 +223,7 @@ class TimesheetController extends Controller
             $timesheet = TimesheetModel::create([
                 'project_id'  => $request->project_code,
                 'staff_id'     => $request->staff_id,
+                'user_id'      => Auth::id(),
                 'entry_date'  => $entryDate,
                 'hours_spent' => $request->hours_spent,
                 'notes'       => $request->notes,

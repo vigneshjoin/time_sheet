@@ -163,7 +163,9 @@ $(function() {
        clearValidationErrors('#userCreateForm');
     });
 
-    
+    $(document).on('click', '.view-btn', function() {
+        $('.modal-title').empty().html('View User');
+    });
    
     //userId when model will be open i need to trigger get users by user id ajax 
     $(document).on('click', '.edit-Id', function() { 

@@ -131,7 +131,7 @@ $(function() {
         $("#SubmitBtn").removeClass('edit-mode');
        document.getElementById("CreateForm").reset();
        $('#SubmitBtn').empty().html('Create');
-       $('.modal-title').empty().html('Create');
+       $('.modal-title').empty().html('Create Project');
        clearValidationErrors('#CreateForm');
     });
 
@@ -218,7 +218,9 @@ $(function() {
         });
     }); 
 
-
+    $(document).on('click', '.view-btn', function() {
+        $('.modal-title').empty().html('View Project');
+    });
      $(document).on('click', '.edit-mode', function() { 
         
         console.info('Edit mode clicked');

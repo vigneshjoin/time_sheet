@@ -1,3 +1,11 @@
+@php
+
+    $statusEditable = '';
+    if($user->user_type != 'admin' || $user->user_type != 'super_admin'){
+        $statusEditable = 'readonly disabled ';
+    }
+@endphp
+
 <!-- Add / Edit Project Modal -->
 <div class="modal fade" id="model_item">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -27,7 +35,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="project_id" class="form-label">Project ID <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-md" 
+                                <input type="text" {{ $statusEditable }} class="form-control form-control-md" 
                                        id="project_id" name="project_id" 
                                        placeholder="Enter unique project ID">
                             </div>
@@ -37,7 +45,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="project_name" class="form-label">Project Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-md" 
+                                <input type="text" {{ $statusEditable }} class="form-control form-control-md" 
                                        id="project_name" name="project_name" 
                                        placeholder="Enter project name">
                             </div>
@@ -47,7 +55,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="project_users" class="form-label">Assign Users <span class="text-danger">*</span></label>
-                                <select style="" class="form-select form-select-md select2" 
+                                <select {{ $statusEditable }} class="form-select form-select-md select2" 
                                         id="project_users" 
                                         name="project_users[]" 
                                         multiple
@@ -64,7 +72,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control form-control-md" 
+                                <textarea {{ $statusEditable }} class="form-control form-control-md" 
                                           id="description" name="description" 
                                           placeholder="Enter project description" rows="3"></textarea>
                             </div>
@@ -74,7 +82,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="start_date" class="form-label">Project Start Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control form-control-md" 
+                                <input {{ $statusEditable }} type="date" class="form-control form-control-md" 
                                        id="start_date" name="start_date">
                             </div>
                         </div>
@@ -83,7 +91,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="due_date" class="form-label">Project Due Date <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control form-control-md" 
+                                <input {{ $statusEditable }} type="date" class="form-control form-control-md" 
                                        id="due_date" name="due_date">
                             </div>
                         </div>
@@ -92,7 +100,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-select form-select-md" id="status" name="status">
+                                <select {{ $statusEditable }} class="form-select form-select-md" id="status" name="status">
                                     <option value="">Select status</option>
                                     <option value="Yet to Start">Yet to Start</option>
                                     <option value="In Progress">In Progress</option>
@@ -106,10 +114,12 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="SubmitBtn">Save Project</button>
-                </div>
+                @if($user_type == 'admin' || $user_type == 'super_admin' )
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="SubmitBtn">Save Project</button>
+                    </div>
+                @endif
             </form>
         </div>
     </div>

@@ -44,7 +44,7 @@
                                                 @endif
 
                                                 @if($preview === 'true')
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="edit-Id btn btn-icon btn-sm btn-info-light" data-bs-toggle="tooltip" title="Preview" data-user-id="{{ $row->id }}" >
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="edit-Id  view-btn btn btn-icon btn-sm btn-info-light" data-bs-toggle="tooltip" title="Preview" data-user-id="{{ $row->id }}" >
                                                         <i class="ti ti-eye fs-14"></i>
                                                     </a>
                                                 @endif

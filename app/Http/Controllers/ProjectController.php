@@ -131,7 +131,11 @@ class ProjectController extends Controller
             $project->start_date   = $request->start_date;
             $project->due_date     = $request->due_date;
             $project->status       = $request->status;
-            $project->save();
+
+            if (Auth::user()->user_type == 'super_admin' || Auth::user()->user_type == 'admin') {
+                $project->save();
+            }
+            
 
             // Return project with user_ids as array
             $projectData = $project->toArray();
@@ -157,8 +161,10 @@ class ProjectController extends Controller
     function destroy($id)
     {
         try {
-            $ProjectModel = ProjectModel::findOrFail($id);
-            $ProjectModel->delete();
+            if (Auth::user()->user_type == 'super_admin' || Auth::user()->user_type == 'admin') {
+                $ProjectModel = ProjectModel::findOrFail($id);
+                $ProjectModel->delete();
+            }
 
             return redirect()->route('admin.projects.index')->with('success', 'User deleted successfully.');
         } catch (Exception $e) {
@@ -191,15 +197,17 @@ class ProjectController extends Controller
 
             // dd($request->project_users) ;
             // Create project record
-            $project = ProjectModel::create([
-                'project_id'   => $request->project_id,
-                'user_ids'     => json_encode($request->project_users),
-                'project_name' => $request->project_name,
-                'description'  => $request->description,
-                'start_date'   => $request->start_date,
-                'due_date'     => $request->due_date,
-                'status'       => $request->status,
-            ]);
+            if (Auth::user()->user_type == 'super_admin' || Auth::user()->user_type == 'admin') {
+                $project = ProjectModel::create([
+                    'project_id'   => $request->project_id,
+                    'user_ids'     => json_encode($request->project_users),
+                    'project_name' => $request->project_name,
+                    'description'  => $request->description,
+                    'start_date'   => $request->start_date,
+                    'due_date'     => $request->due_date,
+                    'status'       => $request->status,
+                ]);
+            }
 
             // Return created project with user_ids decoded as array
             $projectData = $project->toArray();

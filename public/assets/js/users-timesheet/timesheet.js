@@ -166,9 +166,19 @@ $(function() {
                 $('#hours_spent').val(response.data.hours_spent);
                 $('#notes').val(response.data.notes);
                 $('#status').val(response.data.status);
-                let parts = response.data.entry_date.split('-'); // ["03", "12", "2026"]
-                let formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // 2026-12-03
-                $("#entry_date").val(formattedDate);
+                
+                // let parts = response.data.entry_date.split('-'); // ["03", "12", "2026"]
+                // let formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // 2026-12-03
+                // $("#entry_date").val(formattedDate);
+
+
+                var dateString = response.data.entry_date; // "01-11-2025, 12:00 AM"
+                if (dateString) {
+                    var parts = dateString.split(",")[0].split("-"); // ["01","11","2025"]
+                    var formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0]; // "2025-11-01"
+                    $("#entry_date").val(formattedDate);
+                }
+
                 $('#edit_timesheet_id').val(response.data.id);
 
             },
@@ -187,6 +197,10 @@ $(function() {
         } else {
             console.warn("DataTable not initialized yet.");
         }
+    });
+
+    $(document).on('click', '.view-btn', function() {
+        $('.modal-title').empty().html('View Timesheet');
     });
 
      $(document).on('click', '.edit-mode', function() { 

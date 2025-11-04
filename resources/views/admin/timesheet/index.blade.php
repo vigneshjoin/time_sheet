@@ -11,7 +11,7 @@
 	<div class="d-flex justify-content-end mb-3">
 		<a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="create-btn btn btn-primary d-flex align-items-center"><i class="ti ti-circle-plus me-2"></i>Add Projects</a>
 		<!-- <button href="#" class="refresh">refresh</button> -->
-		<button id="refreshBtn" class="btn btn-primary">Refresh Projects</button>
+		<!-- <button id="refreshBtn" class="btn btn-primary">Refresh Projects</button> -->
 	</div>
 	@endsection
  <!-- add user button  -->

@@ -22,9 +22,11 @@
 <!-- inner section -->
  <!-- add user button  -->
   @section('inner_button_section')
-	<div class="d-flex justify-content-end mb-3">
-		<a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="create-btn btn btn-primary d-flex align-items-center"><i class="ti ti-circle-plus me-2"></i>Add Projects</a>
-	</div>
+		@if($user ->user_type == 'admin' || $user ->user_type == 'super_admin' )
+			<div class="d-flex justify-content-end mb-3">
+				<a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="create-btn btn btn-primary d-flex align-items-center"><i class="ti ti-circle-plus me-2"></i>Add Projects</a>
+			</div>
+		@endif
 	@endsection
  <!-- add user button  -->
 	

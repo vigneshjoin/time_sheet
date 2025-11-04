@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 
 class TimesheetController extends Controller
 {
@@ -19,9 +21,13 @@ class TimesheetController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $projects = ProjectModel::select(
-                        'project_id',
-                    )->get();
+        $userId = Auth::id();
+
+        $projects = DB::select("
+                        SELECT * 
+                        FROM projects 
+                        WHERE JSON_CONTAINS(user_ids, ?, '$') ", 
+                    [json_encode((string)$userId)]);
 
         $Timesheet = TimesheetModel::select(
                         'id',
@@ -35,8 +41,6 @@ class TimesheetController extends Controller
                         $item->status = ucfirst($item->status); // Capitalize first letter
                         return $item;
                     });
-
-        // dd( $user);
         return view('admin.timesheet.index', compact('Timesheet','user', 'projects'));
     }
 

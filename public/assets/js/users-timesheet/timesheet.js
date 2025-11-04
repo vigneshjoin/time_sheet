@@ -178,6 +178,16 @@ $(function() {
         });
     }); 
 
+    $(document).on('click', '#refreshBtn', function() {
+        console.info('Refresh clicked');
+        
+        var dataTable = $('.datatable').DataTable();
+        if (dataTable) {
+            dataTable.ajax.reload(null, false);
+        } else {
+            console.warn("DataTable not initialized yet.");
+        }
+    });
 
      $(document).on('click', '.edit-mode', function() { 
         

@@ -169,7 +169,6 @@ class ProjectController extends Controller
      // i'm doing ajax form submission so store function need to handle request so need to add request parameter
     public function store(Request $request)
     {
-        
         try {
             // Validate input
             $validator = Validator::make($request->all(), [
@@ -190,6 +189,7 @@ class ProjectController extends Controller
                 ], 422);
             }
 
+            // dd($request->project_users) ;
             // Create project record
             $project = ProjectModel::create([
                 'project_id'   => $request->project_id,

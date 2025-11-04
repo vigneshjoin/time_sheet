@@ -194,13 +194,20 @@ $(function() {
                 // trigger change so UI (and select2 if present) updates
                 $('#project_users').trigger('change');
 
-                var dateString = response.data.start_date;
-                var start_date = dateString ? dateString.split("T")[0] : "";
-                $("#start_date").val(start_date);
+                var dateString = response.data.start_date; // "01-11-2025, 12:00 AM"
+                if (dateString) {
+                    var parts = dateString.split(",")[0].split("-"); // ["01","11","2025"]
+                    var formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0]; // "2025-11-01"
+                    $("#start_date").val(formattedDate);
+                }
 
-                var dueDate = response.data.due_date;
-                var toDate = dueDate ? dueDate.split("T")[0] : "";
-                $("#due_date").val(toDate);
+                var dueDate = response.data.due_date; // "05-11-2025, 12:00 AM"
+                if (dueDate) {
+                    var parts2 = dueDate.split(",")[0].split("-");
+                    var formattedDue = parts2[2] + "-" + parts2[1] + "-" + parts2[0];
+                    $("#due_date").val(formattedDue);
+                }
+
 
                 $('#status').val(response.data.status);
                 $('#edit_project_id').val(response.data.id);

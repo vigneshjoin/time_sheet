@@ -44,7 +44,7 @@
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/daterangepicker.css') }}">
 
 	<!-- Datatable CSS -->
-	<link rel="stylesheet" href="{{ asset('admin/assets/css/dataTables.bootstrap5.min.css') }}">
+	 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 
 	<!-- Datetimepicker CSS -->
 	<link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap-datetimepicker.min.css') }}">
@@ -416,10 +416,7 @@
 
 		<!-- ✅ Then Bootstrap (optional) -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-		<!-- ✅ Then DataTables -->
-		<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-		<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+		
 
 
 

@@ -16,15 +16,19 @@
 	<!-- Color Picker JS -->
 	<script src="{{ asset('admin/assets/js/pickr.es5.min.js') }}"></script>
 
-	<!-- Datatable JS -->
-	<script src="{{ asset('admin/assets/js/jquery.dataTables.min.js') }}"></script>
-	<script src="{{ asset('admin/assets/js/dataTables.bootstrap5.min.js') }}"></script>
-
 	<!-- Daterangepikcer JS -->
 	<script src="{{ asset('admin/assets/js/moment.min.js') }}"></script>
 	<!-- <script src="{{ asset('admin/assets/plugins/daterangepicker/daterangepicker.js') }}"></script> -->
 	<script src="{{ asset('admin/assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 
+	<!-- Toastr Notification -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+	<!-- SweetAlert2 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+	
 	<!-- Select2 JS -->
 	<script src="{{ asset('admin/assets/js/select2.min.js') }}"></script>
 
@@ -38,6 +42,33 @@
 	<script src="{{ asset('admin/assets/js/theme-colorpicker.js') }}"></script>
 	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
 	@yield('scripts')
+
+	<script>
+		// Page-specific DataTable init - initialize only if not already initialized
+			document.addEventListener('DOMContentLoaded', function () {
+				var selector = '.datatable';
+				if (typeof $.fn.dataTable !== 'undefined' && $(selector).length) {
+					// initialize only the first table on this page
+					var tableId = $(selector).first().attr('id');
+					if (tableId && !$.fn.dataTable.isDataTable('#' + tableId)) {
+						$('#' + tableId).DataTable({
+							processing: true,
+							pageLength: 25,
+							lengthChange: true,
+							searching: true,
+							ordering: true,
+							responsive: true,
+							language: {
+								paginate: {
+									previous: "<i class='ti ti-chevron-left'></i>",
+									next: "<i class='ti ti-chevron-right'></i>"
+								}
+							}
+						});
+					}
+				}
+			});
+	</script>
 
 </body>
 

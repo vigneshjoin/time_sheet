@@ -19,13 +19,15 @@
 
 			<x-table 
 				title="Time sheet" 
-				:headers="['S.No', 'Project Code', 'User', 'Staff ID', 'Entry Date', 'Hours spent', 'Status', 'Actions']" 
+				:headers="['S.No', 'Project Code', 'User', 'Staff ID', 'Entry Date', 'Hours spent', 'Cost per Hour', 'Total Cost', 'Status', 'Actions']" 
 				:fields="[ 
 							'project_id',
                             'user_name',
 							'staff_id',
 							'entry_date',
 							'hours_spent',
+							'hourly_charges',
+							'total_cost',
 							'status',
 							'actions'
 						]" 
@@ -35,6 +37,15 @@
                 preview='true'
                 delete='false'
 			/>
+
+			<!-- Total hrs , Total cost alignment right side   -->
+			<div class="container mb-2">
+				<div class="text-end">
+					<p class=""><strong>Total Hours:</strong> {{ $totalCostSum }}</p>
+					<p class=""><strong>Total Cost:</strong> {{ $totalHourlyChargesSum }}</p>
+				</div>
+				
+			</div>
 
 			<!--Model box  -->
 			@include('admin.timesheet.view')

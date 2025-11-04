@@ -102,7 +102,7 @@ $(function() {
                                 toastr.success('Created successfully');
                                 form.reset();
                                 // refresh page 
-                                // window.location.reload();
+                                window.location.reload();
                             }else{
                                 toastr.error('Something went wrong!');
                                 toastr.error('Please check the form for errors and try again.',toastr.error);
@@ -158,7 +158,7 @@ $(function() {
         var Id = $(this).data('user-id');
         $(".password-field").hide();
         $('#SubmitBtn').empty().html('Update');
-        $('.modal-title').empty().html('Update');
+        $('.modal-title').empty().html('Update Project');
         clearValidationErrors('#CreateForm');
         // Trigger AJAX request to get user details
         $.ajax({
@@ -249,7 +249,7 @@ $(function() {
                 if (response.status == 'success') {
                     toastr.success('User updated successfully');
                     formEl.reset();
-                    // window.location.reload();
+                    window.location.reload();
                 } else {
                     toastr.error('Please check the form for errors and try again.');
                 }

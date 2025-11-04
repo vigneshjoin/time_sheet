@@ -125,7 +125,7 @@ $(function() {
         $("#SubmitBtn").removeClass('edit-mode');
        document.getElementById("CreateForm").reset();
        $('#SubmitBtn').empty().html('Create');
-       $('.modal-title').empty().html('Create');
+       $('.modal-title').empty().html('Create Log Entry');
        clearValidationErrors('#CreateForm');
 
         setTimeout(function(){ 
@@ -150,7 +150,7 @@ $(function() {
         var Id = $(this).data('user-id');
         $(".password-field").hide();
         $('#SubmitBtn').empty().html('Update');
-        $('.modal-title').empty().html('Update');
+        $('.modal-title').empty().html('Update Log');
         clearValidationErrors('#CreateForm');
         // Trigger AJAX request to get user details
         $.ajax({

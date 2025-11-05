@@ -366,11 +366,14 @@
 										</div>
 
 
-										<div class="card-body" style="display: none;">
-											<a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="#">
-												<i class="ti ti-user-circle me-1"></i>My Profile
-											</a>
-											<a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="#">
+										<div class="card-body">
+
+											<a href="#" data-bs-toggle="modal" data-bs-target="#changePasswordModal" class="create-btn btn btn-primary d-flex align-items-center"><i class="ti ti-lock me-1"></i>Change Password</a>
+
+											<!-- <a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="change-password">
+												<i class="ti ti-lock me-1"></i>Change Password
+											</a> -->
+											<!-- <a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="#">
 												<i class="ti ti-settings me-1"></i>Settings
 											</a>
 
@@ -379,7 +382,7 @@
 											</a>
 											<a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="#">
 												<i class="ti ti-question-mark me-1"></i>Knowledge Base
-											</a>
+											</a> -->
 										</div>
 										<div class="card-footer py-1">
 											<a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="logout"><i
@@ -434,4 +437,4 @@
 			});
 
 	</script>
-		<!-- ready function innor click function -->
+	<!-- ready function innor click function -->

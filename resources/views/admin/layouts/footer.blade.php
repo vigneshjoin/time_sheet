@@ -1,3 +1,6 @@
+	
+	@include('admin.auth.change-password')
+	
 	<!-- ✅ jQuery must load FIRST -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -41,6 +44,7 @@
 	<!-- Custom JS -->
 	<script src="{{ asset('admin/assets/js/theme-colorpicker.js') }}"></script>
 	<script src="{{ asset('admin/assets/js/script.js') }}"></script>
+	<script src="{{ asset('admin/assets/js/custom.js') }}"></script>
 	@yield('scripts')
 
 	<script>

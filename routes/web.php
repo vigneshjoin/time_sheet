@@ -85,6 +85,8 @@ Route::middleware('auth')->group(function () {
      });
 
     Route::get('/logout',  [AdminAuthController::class, 'logout']);
+    Route::get('/change-password',  [AdminAuthController::class, 'changePassword'])->name('admin.changePassword');
+    Route::post('/change-password',  [AdminAuthController::class, 'updatePassword'])->name('admin.change-password');
 });
 
 require __DIR__.'/auth.php';

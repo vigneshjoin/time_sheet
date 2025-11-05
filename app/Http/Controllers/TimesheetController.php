@@ -266,10 +266,11 @@ class TimesheetController extends Controller
                                 return $item;
                         });
 
+                        $totalHours = $Timesheet->sum('hours_spent');
                         $totalCostSum = $Timesheet->sum('hourlyCharges');
                         $totalHourlyChargesSum = $Timesheet->sum('totalCost');
 
         // Data table : buttom of the page : Total hrs , Total cost 
-        return view('admin.timesheet.adminindex', compact('Timesheet', 'user', 'projects', 'totalCostSum', 'totalHourlyChargesSum'));
+        return view('admin.timesheet.adminindex', compact('Timesheet', 'user', 'projects', 'totalHours', 'totalHourlyChargesSum'));
     }
 }

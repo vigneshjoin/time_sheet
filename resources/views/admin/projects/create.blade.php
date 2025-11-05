@@ -1,7 +1,8 @@
 @php
 
     $statusEditable = '';
-    if($user->user_type != 'admin' || $user->user_type != 'super_admin'){
+
+    if($user->user_type == 'staff'){
         $statusEditable = 'readonly disabled ';
     }
 @endphp

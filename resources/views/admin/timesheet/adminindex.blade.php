@@ -41,7 +41,7 @@
 			<!-- Total hrs , Total cost alignment right side   -->
 			<div class="container mb-2">
 				<div class="text-end">
-					<p class=""><strong>Total Hours:</strong> {{ $totalCostSum }}</p>
+					<p class=""><strong>Total Hours:</strong> {{ $totalHours }}</p>
 					<p class=""><strong>Total Cost:</strong> {{ $totalHourlyChargesSum }}</p>
 				</div>
 				

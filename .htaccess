@@ -6,5 +6,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
 
     # Redirect all requests to the public folder
-    RewriteRule ^(.*)$ /public/$1 [L]
+    # RewriteRule ^(.*)$ /public/$1 [L]
+    RewriteRule ^ index.php [L]
+
 </IfModule>

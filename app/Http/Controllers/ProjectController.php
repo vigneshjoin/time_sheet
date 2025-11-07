@@ -19,39 +19,69 @@ class ProjectController extends Controller
    
     public function index()
     {
-        $user = Auth::user();
-        $userId = Auth::id();
+            $user = Auth::user();
+            $userId = Auth::id();
 
-        if( $user->user_type == 'staff') {
-            $users = User::select(
-                                    'id',
-                                    'name',
-                                    'email'
-                                )->get();
-            $ProjectModel = ProjectModel::whereJsonContains('user_ids', (string)$userId)->get();
-        }else{
+            $ProjectModel = ProjectModel::query(); // start the query builder
 
-            // Load all projects for the view (used for Blade rendering)
-            $ProjectModel = ProjectModel::select(
-                                    'id',
+            // 🔹 Apply filters if requested
+            if (request()->query('action') === 'filter') {
+                $filters = request()->only(['filter_project', 'filter_project_name', 'filter_start_date', 'filter_due_date', 'filter_status']);
+
+                foreach ($filters as $key => $value) {
+                    if (!empty($value)) {
+                        // Adjust filter field names to actual DB columns if different
+                        $column = match ($key) {
+                            'filter_project'       => 'project_id',
+                            'filter_project_name'  => 'project_name',
+                            'filter_start_date'    => 'start_date',
+                            'filter_due_date'      => 'due_date',
+                            'filter_status'        => 'status',
+                            default                => $key,
+                        };
+                        $ProjectModel->where($column, 'like', '%' . $value . '%');
+                    }
+                }
+            }
+
+            // 🔹 Apply user-based conditions
+            if ($user->user_type === 'staff') {
+                // show only projects where this staff user is assigned
+                $ProjectModel->whereJsonContains('user_ids', (string)$userId);
+
+                $ProjectLists = ProjectModel::select('id',
                                     'project_id',
-                                    'project_name',
-                                    'description',
-                                    'start_date',
-                                    'due_date',
-                                    'status',
-                                    'created_at'
-                                )->get();
+                                    'project_name'
+                                )->whereJsonContains('user_ids', (string)$userId)->get();
 
-            $users = User::select(
-                                    'id',
-                                    'name',
-                                    'email'
+            } else {
+                // admin — see all projects (no restriction)
+                $ProjectLists = ProjectModel::select('id',
+                                    'project_id',
+                                    'project_name'
                                 )->get();
-        }
+            }
 
-        
-        return view('admin.projects.index', compact('ProjectModel', 'users'));
+            // 🔹 Fetch the projects
+            $ProjectModel = $ProjectModel->select(
+                'id',
+                'project_id',
+                'project_name',
+                'description',
+                'start_date',
+                'due_date',
+                'status',
+                'created_at'
+            )->get();
+
+            
+
+            // 🔹 Load users (common for both)
+            $users = User::select('id', 'name', 'email')->get();
+
+            // 🔹 Return to view
+            return view('admin.projects.index', compact('ProjectModel', 'users', 'ProjectLists'));
+
     }
 
     public function list()

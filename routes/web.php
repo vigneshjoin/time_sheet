@@ -66,12 +66,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/admin/timesheet/{timesheet}/edit', [TimesheetController::class, 'adminEdit'])->name('admin.timesheet.adminEdit');
 
         // User Management Routes
-    });
+    });  
 
-
-   
-
-
+    // Route::get()
     Route::middleware('user_type:super_admin,admin')->group(function () {
 
             Route::get('/projects/create', [ProjectController::class, 'create'])->name('admin.projects.create');
@@ -81,6 +78,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('admin.projects.update');
             Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy');
 
+            
     });
 
      Route::middleware('user_type:super_admin,admin,staff')->group(function () {

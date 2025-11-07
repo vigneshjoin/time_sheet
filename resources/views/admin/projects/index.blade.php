@@ -33,6 +33,67 @@
 		
 		@section('content')
 
+		<div class="card-header">
+
+			<div class="d-flex justify-content-end">
+				<!-- Filter form  -->
+				<form action="" class="d-flex" name="filter_projects" method="GET" id="filter_projects_form">
+					<!-- Filter by project  -->
+					<div class="dropdown me-3">
+						<select class="form-select form-select-md select2" name="filter_project" id="filter_project">
+							<option value=""  disabled selected>Filter by Project</option>
+							@foreach($ProjectLists as $project)
+								<option {{ ($_GET['filter_project'] ?? '') == $project->project_id ? 'selected' : '' }} value="{{ $project->project_id }}">{{ $project->project_id }} ( {{ $project->project_name }} )</option>
+							@endforeach
+						</select>
+					</div>
+
+					<!-- action=filter&filter_start_date=2025-11-01&filter_due_date=2025-11-16 -->
+					 <!-- i need to bind the get values in below fileds  -->
+					<div class="dropdown me-3">
+						<input 
+							type="date" 
+							class="form-control form-control-md" 
+							name="filter_start_date" 
+							id="filter_start_date" 
+							placeholder="Filter by Start Date"
+							value="{{ request('filter_start_date') ? date('Y-m-d', strtotime(request('filter_start_date'))) : '' }}"
+						>
+					</div>
+
+					<div class="dropdown me-3">
+						<input 
+							type="date" 
+							class="form-control form-control-md" 
+							name="filter_due_date" 
+							id="filter_due_date" 
+							placeholder="Filter by Due Date"
+							value="{{ request('filter_due_date') ? date('Y-m-d', strtotime(request('filter_due_date'))) : '' }}"
+						>
+					</div>
+
+
+					<div class="dropdown">
+						<select class="form-select form-select-md select2" name="filter_status" id="filter_status">
+							<option value="" disabled selected>Filter by Status</option>
+							<option value="Not Started" {{ ($_GET['filter_status'] ?? '') == 'Not Started' ? 'selected' : '' }}>Not Started</option>
+							<option value="In Progress" {{ ($_GET['filter_status'] ?? '') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+							<option value="Completed" {{ ($_GET['filter_status'] ?? '') == 'Completed' ? 'selected' : '' }}>Completed</option>
+							<option value="On Hold" {{ ($_GET['filter_status'] ?? '') == 'On Hold' ? 'selected' : '' }}>On Hold</option>
+						</select>
+					</div>
+					<div class="d-flex justify-content-end ms-3">
+						<button type="button" class="btn btn-primary ms-2" id="filter_projects_btn">Filter</button>
+						<button type="button" class="btn btn-secondary ms-2" id="reset_filters_btn">Reset</button>
+					</div>
+				</form>
+
+				<!-- Filter form  -->
+
+			</div>
+			
+		</div>
+
 			<x-table 
 				title="Project List" 
 				:headers="['S.No', 'Project Code', 'Project Start date', 'Project Due date', 'Project Name', 'Status', 'Actions']" 

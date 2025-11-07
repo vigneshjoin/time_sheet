@@ -21,13 +21,13 @@
 
 			<x-table 
 				title="Time sheet" 
-				:headers="['S.No', 'Project Code', 'Staff ID', 'Entry Date', 'Hours spent', 'Status', 'Actions']" 
+				:headers="['S.No', 'Project Code', 'Staff ID', 'Entry Date', 'Hours spent', 'Project Status', 'Actions']" 
 				:fields="[ 
 							'project_id',
 							'staff_id',
 							'entry_date',
 							'hours_spent',
-							'status',
+							'project_status',
 							'actions'
 						]" 
 				:rows="$Timesheet"

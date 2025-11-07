@@ -21,7 +21,7 @@ $(function() {
             $("#CreateForm").validate({
                 ignore: [],
                 rules: {
-                    project_id: {
+                    project_code: {
                         required: true
                     },
                     user_id: {
@@ -39,9 +39,6 @@ $(function() {
                     },
                     notes: {
                         maxlength: 1000
-                    },
-                    status: {
-                        required: true
                     }
                 },
                 messages: {

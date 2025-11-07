@@ -45,7 +45,7 @@ class TimesheetModel extends Model
      */
     public function getEntryDateAttribute($value)
     {
-        return date('d-m-Y, h:i A', strtotime($value));
+        return date('d-m-Y', strtotime($value));
     }
 
     public function getCreatedAtAttribute($value)

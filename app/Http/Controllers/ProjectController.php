@@ -19,42 +19,76 @@ class ProjectController extends Controller
    
     public function index()
     {
-        //user_ids
-        // Load all projects for the view (used for Blade rendering)
-        $ProjectModel = ProjectModel::select(
-                                'id',
-                                'project_id',
-                                'project_name',
-                                'description',
-                                'start_date',
-                                'due_date',
-                                'status',
-                                'created_at'
-                            )->get();
+        $user = Auth::user();
+        $userId = Auth::id();
 
-        $users = User::select(
-                                'id',
-                                'name',
-                                'email'
-                            )->get();
+        if( $user->user_type == 'staff') {
+            $users = User::select(
+                                    'id',
+                                    'name',
+                                    'email'
+                                )->get();
+            $ProjectModel = ProjectModel::whereJsonContains('user_ids', (string)$userId)->get();
+        }else{
+
+            // Load all projects for the view (used for Blade rendering)
+            $ProjectModel = ProjectModel::select(
+                                    'id',
+                                    'project_id',
+                                    'project_name',
+                                    'description',
+                                    'start_date',
+                                    'due_date',
+                                    'status',
+                                    'created_at'
+                                )->get();
+
+            $users = User::select(
+                                    'id',
+                                    'name',
+                                    'email'
+                                )->get();
+        }
+
+        
         return view('admin.projects.index', compact('ProjectModel', 'users'));
     }
 
     public function list()
     {
-        // Return data as JSON (for DataTables AJAX, etc.)
-        $projects = ProjectModel::select(
-            'id',
-            'project_id',
-            'project_name',
-            'description',
-            'start_date',
-            'due_date',
-            'status',
-            'created_at'
-        )->get();
+        $user = Auth::user();
+        $userId = Auth::id();
 
-        return response()->json(['data' => $projects]);
+        if( $user->user_type == 'staff') {
+            $users = User::select(
+                                    'id',
+                                    'name',
+                                    'email'
+                                )->get();
+            $ProjectModel = ProjectModel::whereJsonContains('user_ids', (string)$userId)->get();
+        }else{
+
+            // Load all projects for the view (used for Blade rendering)
+            $ProjectModel = ProjectModel::select(
+                                    'id',
+                                    'project_id',
+                                    'project_name',
+                                    'description',
+                                    'start_date',
+                                    'due_date',
+                                    'status',
+                                    'created_at'
+                                )->get();
+
+            $users = User::select(
+                                    'id',
+                                    'name',
+                                    'email'
+                                )->get();
+        }
+
+        
+        return view('admin.projects.index', compact('ProjectModel', 'users'));
     }
 
 
@@ -156,6 +190,52 @@ class ProjectController extends Controller
         }
     }
 
+
+    public function status_update(Request $request, $id)
+    {
+        try {
+            // Find project
+            $project = ProjectModel::find($id);
+            if (! $project) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Project not found.',
+                ], 404);
+            }
+
+            // Validate input (ignore unique for the same project_id)
+            $validator = Validator::make($request->all(), [
+                'project_id'     => 'required|string|max:100|unique:projects,project_id,' . $id,
+                'status'         => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Validation failed.',
+                    'errors'  => $validator->errors(),
+                ], 422);
+            }
+            
+            // Update fields
+            $project->project_id   = $request->project_id;
+            $project->status       = $request->status;
+            $project->save();
+            
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Project updated successfully.',
+                'data'    => $project,
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Something went wrong.',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
 
     // delete user based on id  need to redirect to users page with success message
     function destroy($id)

@@ -18,12 +18,12 @@ class UsersController extends Controller
     { 
         // i need to show all users pass to list view i'm use data table so just return view
         // $users = User::all();
-        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->get();
+        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
         return view('admin.users.index', compact('users'));
     }
 
     function list(){
-        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->get();
+        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
         return response()->json(['data' => $users]);
     }
 

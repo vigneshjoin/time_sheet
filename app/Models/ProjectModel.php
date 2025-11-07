@@ -45,12 +45,14 @@ class ProjectModel extends Model
     // start_date format
     public function getStartDateAttribute($value)
     {
-        return date('d-m-Y, h:i A', strtotime($value));
+        // return date('d-m-Y, h:i A', strtotime($value));
+        return date('d-m-Y', strtotime($value));
     }
     // due_date format
     public function getDueDateAttribute($value)
     {
-        return date('d-m-Y, h:i A', strtotime($value));
+        return date('d-m-Y', strtotime($value));
+        // return date('d-m-Y, h:i A', strtotime($value));
     }
 
     public function getEntryDateAttribute($value)

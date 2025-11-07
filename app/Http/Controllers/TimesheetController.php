@@ -31,17 +31,22 @@ class TimesheetController extends Controller
                     [json_encode((string)$userId)]);
 
         $Timesheet = TimesheetModel::select(
-                        'id',
-                        'project_id',
-                        'user_id',
-                        'staff_id',
-                        'entry_date',
-                        'hours_spent',
-                        'status',
-                    )->get()->transform(function ($item) {
-                        $item->status = ucfirst($item->status); // Capitalize first letter
-                        return $item;
-                    });
+                            'timesheets.id',
+                            'timesheets.project_id',
+                            'timesheets.staff_id',
+                            'timesheets.entry_date',
+                            'timesheets.hours_spent',
+                            'timesheets.notes',
+                            'timesheets.status as timesheet_status',
+                            'timesheets.created_at',
+                            'projects.status as project_status' // project status
+                        )
+                        ->join('projects', 'projects.project_id', '=', 'timesheets.project_id')
+                        ->where('timesheets.user_id', $userId)
+                        ->get();
+
+            // return response()->json(['data' => $Timesheet ]);
+
         return view('admin.timesheet.index', compact('Timesheet','user', 'projects'));
     }
 
@@ -50,17 +55,21 @@ class TimesheetController extends Controller
 
     public function list()
     {
-        // Return data as JSON (for DataTables AJAX, etc.)
+        $userId = Auth::id();
         $Timesheet = TimesheetModel::select(
-                        'id',
-                        'project_id',
-                        'staff_id',
-                        'entry_date',
-                        'hours_spent',
-                        'notes',
-                        'status',
-                        'created_at'
-                    )->get();
+                        'timesheets.id',
+                        'timesheets.project_id',
+                        'timesheets.staff_id',
+                        'timesheets.entry_date',
+                        'timesheets.hours_spent',
+                        'timesheets.notes',
+                        'timesheets.status as timesheet_status',
+                        'timesheets.created_at',
+                        'projects.status as project_status' // project status
+                    )
+                    ->join('projects', 'projects.project_id', '=', 'timesheets.project_id')
+                    ->where('timesheets.user_id', $userId)
+                    ->get();
 
         return response()->json(['data' => $Timesheet ]);
     }
@@ -113,7 +122,7 @@ class TimesheetController extends Controller
                 'entry_date'         => 'required|date',
                 'hours_spent'  => 'required|numeric|min:0',
                 'notes'        => 'nullable|string|max:1000',
-                'status'       => 'required|string|in:active,inactive',
+                // 'status'       => 'required|string|in:active,inactive',
             ]);
 
             if ($validator->fails()) {
@@ -130,7 +139,7 @@ class TimesheetController extends Controller
             $timesheet->entry_date    = $request->entry_date;
             $timesheet->hours_spent  = $request->hours_spent;
             $timesheet->notes        = $request->notes;
-            $timesheet->status       = $request->status;
+            // $timesheet->status       = $request->status;
             $timesheet->save();
 
 
@@ -175,7 +184,7 @@ class TimesheetController extends Controller
                 'entry_date'         => 'required|date',
                 'hours_spent'  => 'required|numeric|min:0',
                 'notes'        => 'nullable|string|max:1000',
-                'status'       => 'required|string|in:active,inactive',
+                // 'status'       => 'required|string|in:active,inactive',
             ]);
 
             if ($validator->fails()) {
@@ -195,7 +204,7 @@ class TimesheetController extends Controller
                 'entry_date'  => $entryDate,
                 'hours_spent' => $request->hours_spent,
                 'notes'       => $request->notes,
-                'status'      => $request->status,
+                // 'status'      => $request->status,
             ]);
 
 

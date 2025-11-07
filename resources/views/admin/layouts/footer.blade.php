@@ -50,28 +50,50 @@
 	<script>
 		// Page-specific DataTable init - initialize only if not already initialized
 			document.addEventListener('DOMContentLoaded', function () {
-				var selector = '.datatable';
-				if (typeof $.fn.dataTable !== 'undefined' && $(selector).length) {
-					// initialize only the first table on this page
-					var tableId = $(selector).first().attr('id');
-					if (tableId && !$.fn.dataTable.isDataTable('#' + tableId)) {
-						$('#' + tableId).DataTable({
-							processing: true,
-							pageLength: 25,
-							lengthChange: true,
-							searching: true,
-							ordering: true,
-							responsive: true,
-							language: {
-								paginate: {
-									previous: "<i class='ti ti-chevron-left'></i>",
-									next: "<i class='ti ti-chevron-right'></i>"
-								}
-							}
-						});
-					}
-				}
-			});
+    var selector = '.datatable';
+
+    if (typeof $.fn.dataTable !== 'undefined' && $(selector).length) {
+        var $table = $(selector).first();
+        var tableId = $table.attr('id');
+
+        // Check if table has <thead> and at least one <th>
+        var hasHeader = $table.find('thead th').length > 0;
+        // Count header columns
+        var headerCount = $table.find('thead th').length;
+        // Count columns in the first body row (if exists)
+        var bodyCount = $table.find('tbody tr:first td').length;
+
+        // Initialize only if structure is valid
+        if (
+            tableId &&
+            hasHeader &&
+            (bodyCount === 0 || bodyCount === headerCount) &&
+            !$.fn.dataTable.isDataTable('#' + tableId)
+        ) {
+            $('#' + tableId).DataTable({
+                processing: true,
+                pageLength: 25,
+                lengthChange: true,
+                searching: true,
+                ordering: true,
+                responsive: true,
+                language: {
+                    emptyTable: "No records found",
+                    paginate: {
+                        previous: "<i class='ti ti-chevron-left'></i>",
+                        next: "<i class='ti ti-chevron-right'></i>"
+                    }
+                }
+            });
+        } else if (bodyCount !== headerCount && bodyCount > 0) {
+            console.warn(
+                `Skipping DataTable init for #${tableId} — column mismatch (${headerCount} headers vs ${bodyCount} cells).`
+            );
+        }
+    }
+});
+
+
 	</script>
 
 </body>

@@ -13,6 +13,45 @@ $(function() {
         }
     })();
 	
+    $(document).on('click', '#updateSubmitBtn', function() {
+        console.info('Update button clicked');
+        $(this).prop('disabled', true)
+            .html('<span class="spinner-border spinner-border-sm"></span> Updating...');
+
+        $.ajax({
+            url: $("#home_url").val() + '/projects/status_update/' + $('#edit_project_id').val() ,
+            type: 'PUT',
+            data: {
+                status: $('#status').val(),
+                project_id: $('#project_id').val(),
+                _token: $('meta[name="csrf-token"]').attr('content') || $('input[name="_token"]').val()
+            },
+            success: function(response) {
+                if(response.status == 'success') {
+                    toastr.success('Updated successfully');
+                    $(".btn-close").click();
+                    window.location.reload();
+                }else{
+                    toastr.error('Something went wrong!');
+                    toastr.error('Please check the form for errors and try again.',toastr.error);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Something went wrong!');
+                }
+            },
+            complete: function() {
+                $(this).prop('disabled', false).html('Updated');
+            }
+        });
+
+
+    });
     // Form validation  SubmitBtn
     $(document).on('click', '.create-mode', function() { 
         console.info('create mode clicked');

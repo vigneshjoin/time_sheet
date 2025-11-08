@@ -21,6 +21,7 @@ class TimesheetController extends Controller
 
     public function index()
     {
+        //  TimesheetLists
         $user = Auth::user();
         $userId = Auth::id();
 
@@ -28,9 +29,32 @@ class TimesheetController extends Controller
                         SELECT * 
                         FROM projects 
                         WHERE JSON_CONTAINS(user_ids, ?, '$') ", 
-                    [json_encode((string)$userId)]);
+                        [json_encode((string)$userId)]
+                    );
 
-        $Timesheet = TimesheetModel::select(
+
+
+        $TimesheetModel = TimesheetModel::query(); // start the query builder
+
+        // 🔹 Apply filters if requested
+        if (request()->query('action') === 'filter') {
+            $filters = request()->only(['filter_project', 'filter_status', 'filter_entry_date']);
+
+            foreach ($filters as $key => $value) {
+                if (!empty($value)) {
+                    // Adjust filter field names to actual DB columns if different
+                    $column = match ($key) {
+                        'filter_project'       => 'timesheets.project_id',
+                        'filter_status'        => 'timesheets.status',
+                        'filter_entry_date'    => 'timesheets.entry_date',
+                        default                => $key,
+                    };
+                    $TimesheetModel->where($column, $value);
+                }
+            }
+        }
+
+        $Timesheet = $TimesheetModel->select(
                             'timesheets.id',
                             'timesheets.project_id',
                             'timesheets.staff_id',
@@ -45,9 +69,8 @@ class TimesheetController extends Controller
                         ->where('timesheets.user_id', $userId)
                         ->get();
 
-            // return response()->json(['data' => $Timesheet ]);
-
-        return view('admin.timesheet.index', compact('Timesheet','user', 'projects'));
+                        // $users = $user;
+        return view('admin.timesheet.index', compact('Timesheet','user','projects'));
     }
 
    
@@ -245,6 +268,30 @@ class TimesheetController extends Controller
     public function timesheetlists()
     {
         $user       = Auth::user();
+        $users      = User::select('id', 'name')->get();
+
+        $TimesheetModel = TimesheetModel::query(); // start the query builder
+
+        // 🔹 Apply filters if requested
+        if (request()->query('action') === 'filter') {
+            $filters = request()->only(['filter_project', 'filter_user', 'filter_status' , 'filter_entry_date']);
+            // dd($filters);
+            foreach ($filters as $key => $value) {
+                if (!empty($value)) {
+                    // Adjust filter field names to actual DB columns if different
+                    $column = match ($key) {
+                        'filter_project'       => 'project_id',
+                        'filter_user'          => 'user_id',
+                        'filter_entry_date'   => 'entry_date',
+                        default                => $key,
+                    };
+                    $TimesheetModel->where($column,  $value );
+                    
+                }
+            }
+        }
+        // 🔹 End of filters
+// dd($column);
         $projects   = ProjectModel::select(
                             'project_id',
                             'project_name',
@@ -255,31 +302,31 @@ class TimesheetController extends Controller
                             'status')
                         ->get();
 
-                        //hourly_charges   i need to get user_id from timesheet table compare to user table and get hourly_charges add that column in timesheet list i need to multiple hours_spent * hourly_charges and show total cost in the data table update the userHourlyCharges  this variable
-                        $userHourlyCharges = User::select('id', 'hourly_charges')->pluck('hourly_charges', 'id');
+       
+        $userHourlyCharges = User::select('id', 'hourly_charges')->pluck('hourly_charges', 'id');
 
-                    $Timesheet  = TimesheetModel::with('user:id,name') // eager load only id + name
-                            ->select('id','project_id','user_id','staff_id','entry_date','hours_spent','status')
-                            ->get()
-                            ->transform(function ($item) use ($userHourlyCharges) {
-                                $item->status = ucfirst($item->status);
-                                $item->user_name = $item->user->name ?? 'N/A'; // Add user name column
-                                
-                                $item->hourly_charges = '$ '.($userHourlyCharges[$item->user_id] ?? 0); // Add hourly charges column
-                                $item->total_cost = '$ '.($item->hours_spent * ($userHourlyCharges[$item->user_id] ?? 0)); // Add total cost column
-                                
-                                $item->hourlyCharges = ($userHourlyCharges[$item->user_id] ?? 0); // Add hourly charges column
-                                $item->totalCost = ($item->hours_spent * ($userHourlyCharges[$item->user_id] ?? 0)); // Add total cost column
-                                
+        $Timesheet  = $TimesheetModel->with('user:id,name') // eager load only id + name
+                ->select('id','project_id','user_id','staff_id','entry_date','hours_spent','status')
+                ->get()
+                ->transform(function ($item) use ($userHourlyCharges) {
+                    $item->status = ucfirst($item->status);
+                    $item->user_name = $item->user->name ?? 'N/A'; // Add user name column
+                    
+                    $item->hourly_charges = '$ '.($userHourlyCharges[$item->user_id] ?? 0); // Add hourly charges column
+                    $item->total_cost = '$ '.($item->hours_spent * ($userHourlyCharges[$item->user_id] ?? 0)); // Add total cost column
+                    
+                    $item->hourlyCharges = ($userHourlyCharges[$item->user_id] ?? 0); // Add hourly charges column
+                    $item->totalCost = ($item->hours_spent * ($userHourlyCharges[$item->user_id] ?? 0)); // Add total cost column
+                    
 
-                                return $item;
-                        });
+                    return $item;
+            });
 
-                        $totalHours = $Timesheet->sum('hours_spent');
-                        $totalCostSum = $Timesheet->sum('hourlyCharges');
-                        $totalHourlyChargesSum = $Timesheet->sum('totalCost');
+            $totalHours = $Timesheet->sum('hours_spent');
+            $totalCostSum = $Timesheet->sum('hourlyCharges');
+            $totalHourlyChargesSum = $Timesheet->sum('totalCost');
 
         // Data table : buttom of the page : Total hrs , Total cost 
-        return view('admin.timesheet.adminindex', compact('Timesheet', 'user', 'projects', 'totalHours', 'totalHourlyChargesSum'));
+        return view('admin.timesheet.adminindex', compact('Timesheet','users', 'user', 'projects', 'totalHours', 'totalHourlyChargesSum'));
     }
 }

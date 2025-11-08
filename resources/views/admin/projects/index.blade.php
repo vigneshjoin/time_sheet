@@ -76,7 +76,7 @@
 					<div class="dropdown">
 						<select class="form-select form-select-md select2" name="filter_status" id="filter_status">
 							<option value="" disabled selected>Filter by Status</option>
-							<option value="Not Started" {{ ($_GET['filter_status'] ?? '') == 'Not Started' ? 'selected' : '' }}>Not Started</option>
+							<option value="Yet to Start" {{ ($_GET['filter_status'] ?? '') == 'Yet to Start' ? 'selected' : '' }}>Yet to Start</option>
 							<option value="In Progress" {{ ($_GET['filter_status'] ?? '') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
 							<option value="Completed" {{ ($_GET['filter_status'] ?? '') == 'Completed' ? 'selected' : '' }}>Completed</option>
 							<option value="On Hold" {{ ($_GET['filter_status'] ?? '') == 'On Hold' ? 'selected' : '' }}>On Hold</option>

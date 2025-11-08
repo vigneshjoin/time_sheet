@@ -16,14 +16,49 @@ class UsersController extends Controller
 {
     function index()
     { 
-        // i need to show all users pass to list view i'm use data table so just return view
         // $users = User::all();
-        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
-        return view('admin.users.index', compact('users'));
+        // user_type need to captalize first letter only in listing
+
+        $UserModel = User::query(); // start the query builder
+
+            // 🔹 Apply filters if requested
+            if (request()->query('action') === 'filter') {
+                $filters = request()->only(['filter_user']);
+
+                foreach ($filters as $key => $value) {
+                    if (!empty($value)) {
+                        // Adjust filter field names to actual DB columns if different
+                        $column = match ($key) {
+                            'filter_user'       => 'id',
+                            default                => $key,
+                        };
+
+                        //i dont want like where function for id field exact match
+                        if($column == 'id'){
+                            $UserModel->where($column, $value);
+                            continue;
+                        }
+                        // $UserModel->where($column, 'like', '%' . $value . '%');
+                    }
+                }
+            }
+
+
+        $users = $UserModel->select('id', 'name', 'staff_id', 'email','user_type', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
+        $users->transform(function ($user) {
+            $user->user_type = ucfirst($user->user_type);
+            return $user;
+        });
+
+        $usersLists = User::select('id', 'name', 'staff_id','user_type', 'email')->orderby('name', 'asc')->get();$usersLists->transform(function ($userList) {
+            $userList->user_type = ucfirst($userList->user_type);
+            return $userList;
+        });
+        return view('admin.users.index', compact('users', 'usersLists'));
     }
 
     function list(){
-        $users = User::select('id', 'name', 'staff_id', 'email', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
+        $users = User::select('id', 'name', 'staff_id', 'email', 'user_type', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
         return response()->json(['data' => $users]);
     }
 

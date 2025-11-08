@@ -247,6 +247,31 @@ $(function() {
             }
         });
     });
+
+     $(document).on('click', '#reset_filters_btn', function() {
+        $('#filter_project').val('');
+        $('#filter_user').val('');
+        $('#filter_status').val('');
+        window.location.href = $("#home_url").val() + '/timesheet';
+    });
+
+    $(document).on('click', '#filter_btn', function() {
+        var project = $('#filter_project').val();
+        var status = $('#filter_status').val();
+        var filter_entry_date = $('#filter_entry_date').val();
+        var queryParams = [];
+        if (project) {
+            queryParams.push('filter_project=' + encodeURIComponent(project));
+        }
+        if (status) {
+            queryParams.push('filter_status=' + encodeURIComponent(status));
+        }
+        if (filter_entry_date) {
+            queryParams.push('filter_entry_date=' + encodeURIComponent(filter_entry_date));
+        }
+        var queryString = queryParams.length > 0 ? '?action=filter&' + queryParams.join('&') : '';
+        window.location.href = $("#home_url").val() + '/timesheet' + queryString;
+    });
 });
 
 

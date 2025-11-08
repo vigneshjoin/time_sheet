@@ -17,10 +17,11 @@
 	
 		
 		@section('content')
+		
 			<x-table 
 				title="User List" 
-				:headers="['S.No', 'Name', 'Staff ID', 'Email', 'Hourly Charges', 'Created At', 'Actions']" 
-				:fields="['name', 'staff_id', 'email', 'hourly_charges', 'created_at', 'actions']" 
+				:headers="['S.No',  'Staff ID', 'Email', 'Hourly Charges', 'User Type', 'Created At', 'Actions']" 
+				:fields="[ 'staff_id', 'email', 'hourly_charges', 'user_type', 'created_at', 'actions']" 
 				:rows="$users"
 				module='users'
 				edit="true"

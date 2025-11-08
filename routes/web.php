@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
         // Projects Management Routes
      });
 
-    Route::get('/logout',  [AdminAuthController::class, 'logout']);
+    Route::get('/logout',  [AdminAuthController::class, 'logout'])->name('admin.logout');
     Route::get('/change-password',  [AdminAuthController::class, 'changePassword'])->name('admin.changePassword');
     Route::post('/change-password',  [AdminAuthController::class, 'updatePassword'])->name('admin.change-password');
 });

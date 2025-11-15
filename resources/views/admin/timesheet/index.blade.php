@@ -1,9 +1,9 @@
 @extends('admin.layouts.main')
-@section('title', 'Timesheet')
+@section('title', 'Timesheet Log Hours')
 @section('innerPageTitleIconClass', 'ti ti-briefcase')
-@section('inner_page_title', 'Timesheet List')
-@section('inner_page_subtitle', 'Timesheet Management')
-@section('inner_page_title2', 'Timesheet List')
+@section('inner_page_title', 'Timesheet Log Hours')
+@section('inner_page_subtitle', 'Timesheet Log Hours')
+@section('inner_page_title2', 'Timesheet List') 
 
 <!-- inner section -->
  <!-- add user button  -->
@@ -58,7 +58,7 @@
 
 			<x-table 
 				title="Time sheet" 
-				:headers="['S.No', 'Project Code', 'Staff ID', 'Entry Date', 'Hours spent', 'Project Status', 'Actions']" 
+				:headers="['S.No', 'Project ID', 'Staff ID', 'Entry Date', 'Logeed Hours', 'Project Status', 'Actions']" 
 				:fields="[ 
 							'project_id',
 							'staff_id',

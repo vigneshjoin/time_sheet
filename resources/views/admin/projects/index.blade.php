@@ -1,10 +1,10 @@
 @extends('admin.layouts.main')
-@section('title', 'Projects')
-@section('menu_title2', ' Project - Management')
+@section('title', 'Project Management')
+@section('menu_title2', ' Project Management')
 @section('innerPageTitleIconClass', 'ti ti-briefcase')
-@section('inner_page_title', 'Projects List')
-@section('inner_page_subtitle', 'Projects Management')
-@section('inner_page_title2', 'Projects List')
+@section('inner_page_title', 'Project Management')
+@section('inner_page_subtitle', 'Project Management')
+@section('inner_page_title2', 'Project List')
 
 @php
 	$user = Auth::user();
@@ -23,14 +23,17 @@
  <!-- add user button  -->
   @section('inner_button_section')
 		@if($user ->user_type == 'admin' || $user ->user_type == 'super_admin' )
-			<div class="d-flex justify-content-end mb-3">
-				<a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="create-btn btn btn-primary d-flex align-items-center"><i class="ti ti-circle-plus me-2"></i>Add Projects</a>
+			<div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+				<a href="#" data-bs-toggle="modal" data-bs-target="#model_item" class="create-btn btn btn-primary d-flex align-items-center"><i class="ti ti-circle-plus me-2"></i>Add Project</a>
+				<div class="head-icons ms-2">
+					<a href="javascript:void(0);" class="" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Collapse" id="collapse-header">
+						<i class="ti ti-chevrons-up"></i>
+					</a>
+				</div> 
 			</div>
 		@endif
 	@endsection
  <!-- add user button  -->
-	
-		
 		@section('content')
 
 		<div class="card-header">
@@ -39,18 +42,19 @@
 				<!-- Filter form  -->
 				<form action="" class="d-flex" name="filter_projects" method="GET" id="filter_projects_form">
 					<!-- Filter by project  -->
-					<div class="dropdown me-3">
+					<!-- <div class="dropdown me-3">
 						<select class="form-select form-select-md select2" name="filter_project" id="filter_project">
 							<option value=""  disabled selected>Filter by Project</option>
 							@foreach($ProjectLists as $project)
 								<option {{ ($_GET['filter_project'] ?? '') == $project->project_id ? 'selected' : '' }} value="{{ $project->project_id }}">{{ $project->project_id }} ( {{ $project->project_name }} )</option>
 							@endforeach
 						</select>
-					</div>
+					</div>-->
 
 					<!-- action=filter&filter_start_date=2025-11-01&filter_due_date=2025-11-16 -->
 					 <!-- i need to bind the get values in below fileds  -->
 					<div class="dropdown me-3">
+						<span>Start Date</span>
 						<input 
 							type="date" 
 							class="form-control form-control-md" 
@@ -60,8 +64,8 @@
 							value="{{ request('filter_start_date') ? date('Y-m-d', strtotime(request('filter_start_date'))) : '' }}"
 						>
 					</div>
-
 					<div class="dropdown me-3">
+						<span>End Date</span>
 						<input 
 							type="date" 
 							class="form-control form-control-md" 

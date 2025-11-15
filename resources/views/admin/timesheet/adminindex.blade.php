@@ -1,9 +1,9 @@
 @extends('admin.layouts.main')
-@section('title', 'Timesheet')
+@section('title', 'Timesheet Log Hours')
 @section('innerPageTitleIconClass', 'ti ti-briefcase')
-@section('inner_page_title', 'Timesheet List')
-@section('inner_page_subtitle', 'Timesheet Management')
-@section('inner_page_title2', 'Timesheet List')
+@section('inner_page_title', 'Timesheet Log Hours')
+@section('inner_page_subtitle', 'Timesheet Log Hours')
+@section('inner_page_title2', 'Timesheet List') 
 
 <!-- inner section -->
  <!-- add user button  -->
@@ -63,7 +63,7 @@
 
 			<x-table 
 				title="Time sheet" 
-				:headers="['S.No', 'Project Code', 'User', 'Staff ID', 'Entry Date', 'Hours spent', 'Cost per Hour', 'Total Cost', 'Status', 'Actions']" 
+				:headers="['S.No', 'Project ID', 'User', 'Staff ID', 'Entry Date', 'Logged Hours', 'Cost per Hour', 'Total Cost', 'Status', 'Actions']" 
 				:fields="[ 
 							'project_id',
                             'user_name',
@@ -85,8 +85,7 @@
 			<!-- Total hrs , Total cost alignment right side   -->
 			<div class="container mb-2">
 				<div class="text-end">
-					<p class=""><strong>Total Hours:</strong> {{ $totalHours }}</p>
-					<p class=""><strong>Total Cost:</strong> {{ $totalHourlyChargesSum }}</p>
+					<p class=""><strong>Total Hours:</strong> {{ $totalHours }} &nbsp;&nbsp;<strong>Total Cost:</strong> ₹{{ $totalHourlyChargesSum }}</p>
 				</div>
 				
 			</div>

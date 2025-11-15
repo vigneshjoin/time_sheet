@@ -20,12 +20,5 @@
 	</div>
 
 	@yield('inner_button_section','Add your button - inner_button_section')
-	
-
-	<div class="head-icons ms-2">
-		<a href="javascript:void(0);" class="" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Collapse" id="collapse-header">
-			<i class="ti ti-chevrons-up"></i>
-		</a>
-	</div>
 </div>
 <!-- End Inner page breadcrumb section  -->

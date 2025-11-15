@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Login </title>
+  <title>Adroit PMC - Timesheet Application </title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('admin/assets/modules/bootstrap/css/bootstrap.min.css') }}">
@@ -12,21 +12,36 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/css/components.css') }}">
-
+	<style>
+		.btn-primary, .btn-primary:active, .btn-primary:hover, .btn-primary.disabled:active, .btn-primary.disabled:hover{
+			background:#034A8F !important;
+			border: 1px solid #034A8F !important;
+		}
+	</style>
 </head>
 <body >
   <div id="app">
     <section class="section">
       <div class="container">
         <div class="row">
-          <div class="col-5 mt-5" style="margin-left: 50%;">
-            <div class="card" style="background-color: #7195b91f;">
-                <div class="card-header"><h4>Login</h4></div>
+          <div class="col-md-4 offset-md-4 col-12">
+		  <br>
+            <div class="text-center">
+				<a href="#" class="logo logo-normal">					
+					<img src="{{ asset('assets/img/logo.webp') }}" alt="Logo"  style="width:200px;">
+				</a>
+			</div> 
+			<br>
+			<br>
+            <div class="card">
+                <div class="card-header">
+					<h4>Login</h4>
+				</div> 
                   <div class="card-body">
                     <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate="">
                         @csrf
                       <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">Email Address</label>
                         <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" tabindex="1" required autofocus>
                         <div class="invalid-feedback">
                           Please fill in your email
@@ -54,7 +69,7 @@
                         @endif
                       </div>
                       <div class="form-group">
-                        <button style="background-color: #4777a7;" type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
+                        <button type="submit" class="btn btn-primary w-100" tabindex="4">
                           Login
                         </button>
                       </div>
@@ -64,7 +79,7 @@
             </div>
         </div>
         <div class="simple-footer">
-            Copyright &copy; {{ date('Y') }}
+            &copy; Adroit Claims & ADR Consultants {{ date('Y') }}.
           </div>
       </div>
     </section>

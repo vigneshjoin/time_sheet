@@ -1,9 +1,9 @@
 @extends('admin.layouts.main')
-@section('title', 'Timesheet')
+@section('title', 'Timesheet Log Hours')
 @section('innerPageTitleIconClass', 'ti ti-briefcase')
-@section('inner_page_title', 'Timesheet List')
-@section('inner_page_subtitle', 'Timesheet Management')
-@section('inner_page_title2', 'Timesheet List')
+@section('inner_page_title', 'Timesheet Log Hours')
+@section('inner_page_subtitle', 'Timesheet Log Hours')
+@section('inner_page_title2', 'Timesheet List') 
 
 <!-- inner section -->
  <!-- add user button  -->
@@ -17,9 +17,53 @@
 		
 		@section('content')
 
+			<div class="card-header">
+				<div class="d-flex justify-content-end">
+					<!-- Filter form  -->
+					<form action="" class="d-flex" name="filter_timesheet" method="GET" id="filter_timesheet_form">
+						<!-- Filter by project  -->
+						<div class="dropdown me-3">
+							<select class="form-select form-select-md select2" name="filter_project" id="filter_project">
+								<option value="" disabled selected>Filter by Projects</option>
+								@foreach($projects as $project)
+									<option {{ ($_GET['filter_project'] ?? '') == $project->project_id ? 'selected' : '' }} value="{{ $project->project_id }}">
+										{{ $project->project_id }} ( {{ $project->project_name }} )
+									</option>
+								@endforeach
+							</select>
+						</div>
+
+						<div class="dropdown me-3">
+							<select class="form-select form-select-md select2" name="filter_user" id="filter_user">
+								<option value="" disabled selected>Filter by Users</option>
+								@foreach($users as $user)
+									<option {{ ($_GET['filter_user'] ?? '') == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
+								@endforeach
+							</select>
+						</div>
+
+						<div class="dropdown me-3">
+							<input 
+								type="date" 
+								class="form-control form-control-md" 
+								name="filter_entry_date" 
+								id="filter_entry_date" 
+								placeholder="Filter by Entry Date"
+								value="{{ request('filter_entry_date') ? date('Y-m-d', strtotime(request('filter_entry_date'))) : '' }}"
+							>
+						</div>
+						<div class="d-flex justify-content-end ms-3">
+							<button type="button" class="btn btn-primary ms-2" id="filter_btn">Filter</button>
+							<button type="button" class="btn btn-secondary ms-2" id="reset_filters_btn">Reset</button>
+						</div>
+					</form>
+					<!-- Filter form  -->
+				</div>
+			</div>
+
 			<x-table 
 				title="Time sheet" 
-				:headers="['S.No', 'Project Code', 'User', 'Staff ID', 'Entry Date', 'Hours spent', 'Cost per Hour', 'Total Cost', 'Status', 'Actions']" 
+				:headers="['S.No', 'Project ID', 'User', 'Staff ID', 'Entry Date', 'Logged Hours', 'Cost per Hour', 'Total Cost', 'Status', 'Actions']" 
 				:fields="[ 
 							'project_id',
                             'user_name',
@@ -41,8 +85,7 @@
 			<!-- Total hrs , Total cost alignment right side   -->
 			<div class="container mb-2">
 				<div class="text-end">
-					<p class=""><strong>Total Hours:</strong> {{ $totalCostSum }}</p>
-					<p class=""><strong>Total Cost:</strong> {{ $totalHourlyChargesSum }}</p>
+					<p class=""><strong>Total Hours:</strong> {{ $totalHours }} &nbsp;&nbsp;<strong>Total Cost:</strong> ₹{{ $totalHourlyChargesSum }}</p>
 				</div>
 				
 			</div>

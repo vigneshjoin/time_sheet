@@ -61,23 +61,23 @@ Template Name: Smarthr - Bootstrap Admin Template
 	}
 
 	// Datatable
-	if($('.datatable').length > 0) {
-		$('.datatable').DataTable({
-			"bFilter": true, 
-			"ordering": true,
-			"info": true,
-			"language": {
-				search: ' ',
-				sLengthMenu: 'Row Per Page _MENU_ Entries',
-				searchPlaceholder: "Search",
-				info: "Showing _START_ - _END_ of _TOTAL_ entries",
-				paginate: {
-					next: '<i class="ti ti-chevron-right"></i>',
-					previous: '<i class="ti ti-chevron-left"></i> '
-				},
-			 }
-		});
-	}	
+	// if($('.datatable').length > 0) {
+	// 	$('.datatable').DataTable({
+	// 		"bFilter": true, 
+	// 		"ordering": true,
+	// 		"info": true,
+	// 		"language": {
+	// 			search: ' ',
+	// 			sLengthMenu: 'Row Per Page _MENU_ Entries',
+	// 			searchPlaceholder: "Search",
+	// 			info: "Showing _START_ - _END_ of _TOTAL_ entries",
+	// 			paginate: {
+	// 				next: '<i class="ti ti-chevron-right"></i>',
+	// 				previous: '<i class="ti ti-chevron-left"></i> '
+	// 			},
+	// 		 }
+	// 	});
+	// }	
 
 	// Loader
 	setTimeout(function () {
@@ -88,17 +88,17 @@ Template Name: Smarthr - Bootstrap Admin Template
 	}, 100);
 
 	// Datetimepicker
-	if($('.datetimepicker').length > 0 ){
-		$('.datetimepicker').datetimepicker({
-			format: 'DD-MM-YYYY',
-			icons: {
-				up: "fas fa-angle-up",
-				down: "fas fa-angle-down",
-				next: 'fas fa-angle-right',
-				previous: 'fas fa-angle-left'
-			}
-		});
-	}
+	// if($('.datetimepicker').length > 0 ){
+	// 	$('.datetimepicker').datetimepicker({
+	// 		format: 'DD-MM-YYYY',
+	// 		icons: {
+	// 			up: "fas fa-angle-up",
+	// 			down: "fas fa-angle-down",
+	// 			next: 'fas fa-angle-right',
+	// 			previous: 'fas fa-angle-left'
+	// 		}
+	// 	});
+	// }
 	
 	// toggle-password
 	if($('.toggle-password').length > 0) {
@@ -136,16 +136,16 @@ Template Name: Smarthr - Bootstrap Admin Template
 	}
 
 	// Select 2	
-	if ($('.select2').length > 0) {
-	 	$(".select2").select2();
-	}
+	// if ($('.select2').length > 0) {
+	//  	$(".select2").select2();
+	// }
 	
-	if ($('.select').length > 0) {
-		$('.select').select2({
-			minimumResultsForSearch: -1,
-			width: '100%'
-		});
-	}
+	// if ($('.select').length > 0) {
+	// 	$('.select').select2({
+	// 		minimumResultsForSearch: -1,
+	// 		width: '100%'
+	// 	});
+	// }
 
 	// Select Image
 

@@ -1,7 +1,8 @@
 @php
 
     $statusEditable = '';
-    if($user->user_type != 'admin' || $user->user_type != 'super_admin'){
+
+    if($user->user_type == 'staff'){
         $statusEditable = 'readonly disabled ';
     }
 @endphp
@@ -52,6 +53,7 @@
                         </div>
 
                         <!-- Project Users -->
+                        @if($user->user_type != 'staff')
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="project_users" class="form-label">Assign Users <span class="text-danger">*</span></label>
@@ -67,6 +69,7 @@
                                 <small class="text-muted">Select multiple users who will work on this project</small>
                             </div>
                         </div>
+                        @endif
 
                         <!-- Description -->
                         <div class="col-md-6">
@@ -100,7 +103,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select {{ $statusEditable }} class="form-select form-select-md" id="status" name="status">
+                                <select class="form-select form-select-md" id="status" name="status">
                                     <option value="">Select status</option>
                                     <option value="Yet to Start">Yet to Start</option>
                                     <option value="In Progress">In Progress</option>
@@ -119,6 +122,12 @@
                         <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" id="SubmitBtn">Save Project</button>
                     </div>
+                @endif
+
+                @if($user_type == 'staff')
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="updateSubmitBtn">Update</button>
+                   </div>
                 @endif
             </form>
         </div>

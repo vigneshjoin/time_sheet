@@ -385,7 +385,7 @@
 											</a> -->
 										</div>
 										<div class="card-footer py-1">
-											<a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="logout"><i
+											<a class="dropdown-item d-inline-flex align-items-center p-0 py-2" href="{{ route('admin.logout') }}"><i
 												class="ti ti-login me-2"></i>Logout</a>
 										</div>
 									</div>

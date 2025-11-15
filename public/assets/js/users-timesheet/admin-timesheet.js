@@ -228,6 +228,36 @@ $(function() {
             }
         });
     });
+
+
+     $(document).on('click', '#reset_filters_btn', function() {
+        $('#filter_project').val('');
+        $('#filter_user').val('');
+        $('#filter_status').val('');
+        window.location.href = $("#home_url").val() + '/admin/timesheet';
+    });
+
+    $(document).on('click', '#filter_btn', function() {
+        var project = $('#filter_project').val();
+        var status = $('#filter_status').val();
+        var user = $('#filter_user').val();
+        var queryParams = [];
+        if (project) {
+            queryParams.push('filter_project=' + encodeURIComponent(project));
+        }
+        if (status) {
+            queryParams.push('filter_status=' + encodeURIComponent(status));
+        }
+        if (user) {
+            queryParams.push('filter_user=' + encodeURIComponent(user));
+        }
+        var entryDate = $('#filter_entry_date').val();
+        if (entryDate) {
+            queryParams.push('filter_entry_date=' + encodeURIComponent(entryDate));
+        }
+        var queryString = queryParams.length > 0 ? '?action=filter&' + queryParams.join('&') : '';
+        window.location.href = $("#home_url").val() + '/admin/timesheet' + queryString;
+    });
 });
 
 

@@ -12,7 +12,49 @@ $(function() {
             console.warn('CSRF token not found in meta tag or hidden input.');
         }
     })();
-	
+
+    
+
+
+    $(document).on('click', '#updateSubmitBtn', function() {
+        console.info('Update button clicked');
+        $(this).prop('disabled', true)
+            .html('<span class="spinner-border spinner-border-sm"></span> Updating...');
+
+        $.ajax({
+            url: $("#home_url").val() + '/projects/status_update/' + $('#edit_project_id').val() ,
+            type: 'PUT',
+            data: {
+                status: $('#status').val(),
+                project_id: $('#project_id').val(),
+                _token: $('meta[name="csrf-token"]').attr('content') || $('input[name="_token"]').val()
+            },
+            success: function(response) {
+                if(response.status == 'success') {
+                    toastr.success('Updated successfully');
+                    $(".btn-close").click();
+                    window.location.reload();
+                }else{
+                    toastr.error('Something went wrong!');
+                    toastr.error('Please check the form for errors and try again.',toastr.error);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value[0]);
+                    });
+                } else {
+                    toastr.error('Something went wrong!');
+                }
+            },
+            complete: function() {
+                $(this).prop('disabled', false).html('Updated');
+            }
+        });
+
+
+    });
     // Form validation  SubmitBtn
     $(document).on('click', '.create-mode', function() { 
         console.info('create mode clicked');
@@ -267,6 +309,37 @@ $(function() {
                 $submitBtn.prop('disabled', false).html('Create User');
             }
         });
+    });
+
+
+    $(document).on('click', '#reset_filters_btn', function() {
+        $('#filter_project').val('');
+        $('#filter_start_date').val('');
+        $('#filter_due_date').val('');
+        $('#filter_status').val('');
+        window.location.href = $("#home_url").val() + '/projects';
+    });
+
+    $(document).on('click', '#filter_projects_btn', function() {
+        var project = $('#filter_project').val();
+        var start_date = $('#filter_start_date').val();
+        var due_date = $('#filter_due_date').val();
+        var status = $('#filter_status').val();
+        var queryParams = [];
+        if (project) {
+            queryParams.push('filter_project=' + encodeURIComponent(project));
+        }
+        if (start_date) {
+            queryParams.push('filter_start_date=' + encodeURIComponent(start_date));
+        }
+        if (due_date) {
+            queryParams.push('filter_due_date=' + encodeURIComponent(due_date));
+        }
+        if (status) {
+            queryParams.push('filter_status=' + encodeURIComponent(status));
+        }
+        var queryString = queryParams.length > 0 ? '?action=filter&' + queryParams.join('&') : '';
+        window.location.href = $("#home_url").val() + '/projects' + queryString;
     });
 });
 

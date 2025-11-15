@@ -1,12 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Check if the request is for an existing file or directory
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-
-    # Redirect all requests to the public folder
-    # RewriteRule ^(.*)$ /public/$1 [L]
-    RewriteRule ^ index.php [L]
-
+    # Redirect /timesheet to /timesheet/public
+    RewriteCond %{REQUEST_URI} ^/timesheet/?$
+    RewriteRule ^$ public/ [L,R=301]
 </IfModule>

@@ -6,8 +6,7 @@
 		<div class="sidebar" id="sidebar">
 			<!-- Logo -->
 			<div class="sidebar-logo">
-				<a href="#" class="logo logo-normal">
-					
+				<a href="#" class="logo logo-normal">					
 					<img src="{{ asset('assets/img/logo.webp') }}" alt="Logo"  style="width: 60%;margin-left: 15%;">
 				</a>
 				<a href="#" class="logo-small">
@@ -18,9 +17,6 @@
 				</a>
 			</div>
 			<!-- /Logo -->
-			
-
-
 			<div class="sidebar-inner slimscroll">
 				<div id="sidebar-menu" class="sidebar-menu">
 					<ul class="menu">
@@ -31,21 +27,21 @@
 							<li class="menu-item">
 								<a href="{{ route('admin.users.index') }}" >
 									<i class="ti ti-users" style="margin-right: 5px;"></i> 
-									<span> Users Management</span>
+									<span> User Management</span>
 								</a>
 							</li>
 
 							<li class="menu-item">
 								<a href="{{ route('admin.projects.index') }}">
 									<i class="ti ti-briefcase" style="margin-right: 5px;"></i> 
-									<span> Projects Management</span>
+									<span> Project Management</span>
 								</a>
 							</li>
 
 							<li class="menu-item">
 								<a href="{{ route('admin.timesheet.adminlist') }}">
 									<i class="ti ti-clock" style="margin-right: 5px;"></i> 
-									<span> Time sheet logs</span>
+									<span> Timesheet Log Hours</span>
 								</a>
 							</li>
 
@@ -61,7 +57,7 @@
 							<li class="menu-item">
 								<a href="{{ route('admin.timesheet.index') }}">
 									<i class="ti ti-clock" style="margin-right: 5px;"></i> 
-									<span> Timesheet </span>
+									<span> Timesheet Log Hours</span>
 								</a>
 							</li>
 						@endif

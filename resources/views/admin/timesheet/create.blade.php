@@ -85,7 +85,7 @@
                         </div>
 
                         <!-- Status -->
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="display: none;">
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                 <select class="form-select form-select-md" id="status" name="status">

@@ -258,6 +258,52 @@ $(function() {
         var queryString = queryParams.length > 0 ? '?action=filter&' + queryParams.join('&') : '';
         window.location.href = $("#home_url").val() + '/admin/timesheet' + queryString;
     });
+
+    $(document).on('click', '#export_timesheet_btn', function() {
+        console.info('Export button clicked');
+        var actionUrl = $(this).data('action_url');
+        // Collect filter parameters
+        var project = $('#filter_project').val();
+        var status = $('#filter_status').val();
+        var user = $('#filter_user').val();
+        var queryParams = [];
+        // i need to write ajax function call to action_url with post method
+         queryParams.push('action=' + encodeURIComponent('filter'));
+        if (project) {
+            queryParams.push('filter_project=' + encodeURIComponent(project));
+        }
+        if (status) {
+            queryParams.push('filter_status=' + encodeURIComponent(status));
+        }
+        if (user) {
+            queryParams.push('filter_user=' + encodeURIComponent(user));
+        }
+        var entryDate = $('#filter_entry_date').val();
+        if (entryDate) {
+            queryParams.push('filter_entry_date=' + encodeURIComponent(entryDate));
+        }
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: queryParams.join('&'),    
+            success: function(response) {
+                if (response.status == 'success' && response.file_url) {
+                    // Trigger file download
+
+                    // window.location.href = response.file_url;
+                    // open in new tab
+                    window.open(response.file_url, '_blank');
+                    toastr.success('Export initiated. Your download should begin shortly.');
+                } else {
+                    toastr.error('Export failed. Please try again.');
+                }
+            },
+            error: function(xhr) {
+                toastr.error('An error occurred during export. Please try again.');
+            }
+        });
+    });
+        
 });
 
 

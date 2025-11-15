@@ -56,6 +56,11 @@
 							<button type="button" class="btn btn-primary ms-2" id="filter_btn">Filter</button>
 							<button type="button" class="btn btn-secondary ms-2" id="reset_filters_btn">Reset</button>
 						</div>
+
+						<!-- Export button use icon symbol  -->
+						<div class="d-flex justify-content-end ms-3">
+							<a href="javascript:void(0)" data-action_url="{{ route('admin.timesheet.export') }}" class="btn btn-success ms-2" id="export_timesheet_btn"> <i class="ti ti-download me-2"></i></a>
+						</div>
 					</form>
 					<!-- Filter form  -->
 				</div>

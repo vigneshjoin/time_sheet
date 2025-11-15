@@ -15,6 +15,7 @@
 				<i class="ti ti-chevrons-up"></i>
 			</a>
 		</div>
+		<a href="javascript:void(0);" id="export_btn"  class="btn d-flex align-items-center"><i class="ti ti-download me-2"></i></a>
 	</div>
 	@endsection
  <!-- add user button  -->

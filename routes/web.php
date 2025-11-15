@@ -23,6 +23,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [AdminAuthController::class, 'login'])->name('admin.login')->middleware('guest');
 Route::get('/login', [AdminAuthController::class, 'login']);
 
+// Public test route to verify controller wiring and rewrite rules
+Route::get('/test-users', [UsersController::class, 'test'])->name('admin.users.test');
+
 // Handle the login form submit (POST)
 Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
 
@@ -66,6 +69,11 @@ Route::middleware('auth')->group(function () {
             Route::get('/admin/timesheet/{timesheet}/edit', [TimesheetController::class, 'adminEdit'])->name('admin.timesheet.adminEdit');
 
         // User Management Routes
+
+        // Export report CSV function 
+            Route::post('/timesheet/export', [TimesheetController::class, 'export'])->name('admin.timesheet.export');
+            // Route::post('/users/export', [UsersController::class, 'export'])->name('admin.users.export');
+            // Route::post('/projects/export', [ProjectController::class, 'export'])->name('admin.projects.export');
     });  
 
     // Route::get()

@@ -45,13 +45,19 @@ class UsersController extends Controller
 
 
         $users = $UserModel->select('id', 'name', 'staff_id', 'email','user_type', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
+
         $users->transform(function ($user) {
-            $user->user_type = ucfirst($user->user_type);
+            $user->user_type = ucfirst(str_replace('_', ' ', $user->user_type));
+            return $user;
+        });
+
+        $users->transform(function ($user) {
+            $user->hourly_charges =  '₹ '. $user->hourly_charges;
             return $user;
         });
 
         $usersLists = User::select('id', 'name', 'staff_id','user_type', 'email')->orderby('name', 'asc')->get();$usersLists->transform(function ($userList) {
-            $userList->user_type = ucfirst($userList->user_type);
+            $userList->user_type = ucfirst(str_replace('_', ' ', $userList->user_type));
             return $userList;
         });
         return view('admin.users.index', compact('users', 'usersLists'));

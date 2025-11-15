@@ -270,6 +270,33 @@ $(function() {
             }
         });
     });
+
+    $(document).on('click', '#export_btn', function() {  
+        console.info('Export button clicked');
+        var actionUrl = $(this).data('action_url');
+       
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: {},    
+            success: function(response) {
+                if (response.status == 'success' && response.file_url) {
+                    // Trigger file download
+
+                    // window.location.href = response.file_url;
+                    // open in new tab
+                    window.open(response.file_url, '_blank');
+                    toastr.success('Export initiated. Your download should begin shortly.');
+                } else {
+                    toastr.error('Export failed. Please try again.');
+                }
+            },
+            error: function(xhr) {
+                toastr.error('An error occurred during export. Please try again.');
+            }
+        });
+
+    });
 });
 
 

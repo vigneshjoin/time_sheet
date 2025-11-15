@@ -21,6 +21,7 @@ class TimesheetController extends Controller
 
     public function index()
     {
+        //  TimesheetLists
         $user = Auth::user();
         $userId = Auth::id();
 
@@ -290,7 +291,6 @@ class TimesheetController extends Controller
             }
         }
         // 🔹 End of filters
-// dd($column);
         $projects   = ProjectModel::select(
                             'project_id',
                             'project_name',
@@ -328,4 +328,105 @@ class TimesheetController extends Controller
         // Data table : buttom of the page : Total hrs , Total cost 
         return view('admin.timesheet.adminindex', compact('Timesheet','users', 'user', 'projects', 'totalHours', 'totalHourlyChargesSum'));
     }
+
+    public function export( Request $request){
+        // Build base query with joins to include user and project info
+        $TimesheetModel = TimesheetModel::query()
+            ->join('projects', 'projects.project_id', '=', 'timesheets.project_id')
+            ->join('users', 'users.id', '=', 'timesheets.user_id');
+
+        // Apply filters (same keys as elsewhere)
+        if ($request->action === 'filter') {
+            $filters = $request->only(['filter_project', 'filter_user', 'filter_status', 'filter_entry_date']);
+            foreach ($filters as $key => $value) {
+                if (!empty($value)) {
+                    $column = match ($key) {
+                        'filter_project'     => 'timesheets.project_id',
+                        'filter_user'        => 'timesheets.user_id',
+                        'filter_status'      => 'timesheets.status',
+                        'filter_entry_date'  => 'timesheets.entry_date',
+                        default              => $key,
+                    };
+                    $TimesheetModel->where($column, $value);
+                }
+            }
+        }
+        // Select full set of columns to match what UI exposes (optimized: one query)
+        $Timesheet = $TimesheetModel->select(
+                'timesheets.id',
+                'timesheets.project_id',
+                'timesheets.user_id',
+                'timesheets.staff_id',
+                'timesheets.entry_date',
+                'timesheets.hours_spent',
+                'timesheets.status',
+                DB::raw('projects.status as project_status'),
+                DB::raw('users.name as user_name'),
+                DB::raw('users.hourly_charges as hourly_charges')
+            )
+            ->orderBy('timesheets.id')
+            ->get();
+
+        // Prepare CSV content with derived totals
+        $csvHeader = [
+            'ID',
+            'Project ID',
+            // 'User ID',
+            'User Name',
+            'Staff ID',
+            'Entry Date',
+            'Hours Spent',
+            'Hourly Charges',
+            'Total Cost',
+            'Status',
+            'Project Status',
+        ];
+
+        $csvData = [];
+        foreach ($Timesheet as $item) {
+            $hourly = (float) ($item->hourly_charges ?? 0);
+            $hours  = (float) ($item->hours_spent ?? 0);
+            $total  = $hourly * $hours;
+
+            $csvData[] = [
+                $item->id,
+                $item->project_id,
+                // $item->user_id,
+                $item->user_name,
+                $item->staff_id,
+                $item->entry_date,
+                $hours,
+                '₹ ' . $hourly,
+                '₹ ' . $total,
+                ucfirst((string) $item->status),
+                $item->project_status,
+            ];
+        } 
+
+        $dir = public_path('timesheetLog'.DIRECTORY_SEPARATOR.date('Ymd'));
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0775, true);
+        }
+        
+        $filename = $dir . DIRECTORY_SEPARATOR . 'timesheet_log_'.date('Ymd_His').'.csv';
+        $fileURL = 'timesheetLog/' . date('Ymd') . '/' . 'timesheet_log_'.date('Ymd_His').'.csv';       
+        $handle = fopen($filename, 'w+');
+        // Write UTF-8 BOM so Excel correctly recognizes encoding and displays ₹ symbol
+        fwrite($handle, "\xEF\xBB\xBF");
+        fputcsv($handle, $csvHeader);
+        foreach ($csvData as $row) {
+            fputcsv($handle, $row);
+        }
+        fclose($handle);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'CSV generated successfully.',
+            'file' => $filename,
+            'file_url' => asset($fileURL),
+            
+        ]);
+    }
 }
+
+

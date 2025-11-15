@@ -338,4 +338,94 @@ class ProjectController extends Controller
         }
     }
 
+    function export(Request $request)
+    {
+        try {
+            // Auth context
+            $user = Auth::user();
+            $userId = Auth::id();
+
+            // Build base query for projects
+            $ProjectQuery = ProjectModel::query();
+
+            // Apply filters (same as index())
+            if ($request->action === 'filter') {
+                $filters = $request->only(['filter_project', 'filter_project_name', 'filter_start_date', 'filter_due_date', 'filter_status']);
+                foreach ($filters as $key => $value) {
+                    if (!empty($value)) {
+                        $column = match ($key) {
+                            'filter_project'       => 'project_id',
+                            'filter_project_name'  => 'project_name',
+                            'filter_start_date'    => 'start_date',
+                            'filter_due_date'      => 'due_date',
+                            'filter_status'        => 'status',
+                            default                => $key,
+                        };
+                        $ProjectQuery->where($column, 'like', '%' . $value . '%');
+                    }
+                }
+            }
+
+            // User restriction (staff only sees assigned projects)
+            if ($user && $user->user_type === 'staff') {
+                $ProjectQuery->whereJsonContains('user_ids', (string)$userId);
+            }
+
+            // Fetch data to export
+            $projects = $ProjectQuery->select(
+                'id',
+                'project_id',
+                'project_name',
+                'description',
+                'start_date',
+                'due_date',
+                'status',
+                'created_at'
+            )->orderBy('created_at', 'desc')->get();
+
+            // Prepare CSV meta
+            $columns = ['S.no', 'Project Code', 'Project Name', 'Description', 'Start Date', 'Due Date', 'Status', 'Created At'];
+            $dir = public_path('projects_' . DIRECTORY_SEPARATOR . date('Ymd'));
+            if (!is_dir($dir)) {
+                @mkdir($dir, 0775, true);
+            }
+            $filename = $dir . DIRECTORY_SEPARATOR . 'projects_' . date('Ymd_His') . '.csv';
+            $fileURL = 'projects_' . '/' . date('Ymd') . '/' . 'projects_' . date('Ymd_His') . '.csv';
+
+            // Write CSV (UTF-8 BOM for Excel compatibility)
+            $file = fopen($filename, 'w+');
+            fwrite($file, "\xEF\xBB\xBF");
+            fputcsv($file, $columns);
+            $serial = 1;
+            foreach ($projects as $project) {
+                fputcsv($file, [
+                    $serial++,
+                    $project->project_id,
+                    $project->project_name,
+                    $project->description,
+                    $project->start_date,
+                    $project->due_date,
+                    $project->status,
+                    $project->created_at,
+                ]);
+            }
+            fclose($file);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Project CSV generated successfully.',
+                'file' => $filename,
+                'file_url' => asset($fileURL),
+                'count' => $projects->count(),
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to generate CSV.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+
+    }
+
 }

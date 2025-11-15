@@ -341,6 +341,54 @@ $(function() {
         var queryString = queryParams.length > 0 ? '?action=filter&' + queryParams.join('&') : '';
         window.location.href = $("#home_url").val() + '/projects' + queryString;
     });
+
+    $(document).on('click', '#export_btn', function() { 
+        console.info('Export button clicked');
+        var actionUrl = $(this).data('action_url');
+        var project = $('#filter_project').val();
+        var start_date = $('#filter_start_date').val();
+        var due_date = $('#filter_due_date').val();
+        var status = $('#filter_status').val();
+        var queryParams = [];
+
+        queryParams.push('action=' + encodeURIComponent('filter'));
+
+        if (project) {
+            queryParams.push('filter_project=' + encodeURIComponent(project));
+        }
+        if (start_date) {
+            queryParams.push('filter_start_date=' + encodeURIComponent(start_date));
+        }
+        if (due_date) {
+            queryParams.push('filter_due_date=' + encodeURIComponent(due_date));
+        }
+        if (status) {
+            queryParams.push('filter_status=' + encodeURIComponent(status));
+        }
+        // var queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: queryParams.join('&'),    
+            success: function(response) {
+                if (response.status == 'success' && response.file_url) {
+                    // Trigger file download
+
+                    // window.location.href = response.file_url;
+                    // open in new tab
+                    window.open(response.file_url, '_blank');
+                    toastr.success('Export initiated. Your download should begin shortly.');
+                } else {
+                    toastr.error('Export failed. Please try again.');
+                }
+            },
+            error: function(xhr) {
+                toastr.error('An error occurred during export. Please try again.');
+            }
+        });
+        
+    });
 });
 
 

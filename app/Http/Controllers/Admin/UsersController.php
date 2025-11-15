@@ -44,9 +44,14 @@ class UsersController extends Controller
             }
 
 
-         $users = $UserModel->select('id', 'name', 'staff_id', 'email','user_type', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
+        $users = $UserModel->select('id', 'name', 'staff_id', 'email','user_type', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
         $users->transform(function ($user) {
             $user->user_type = ucfirst(str_replace('_', ' ', $user->user_type));
+            return $user;
+        });
+
+        $users->transform(function ($user) {
+            $user->hourly_charges =  '₹ '. $user->hourly_charges;
             return $user;
         });
 
@@ -237,4 +242,69 @@ class UsersController extends Controller
             ], 500);
         }
     }
+
+    function export(Request $request)
+    {
+        // Implement CSV export logic here
+
+        $UserModel = User::query(); // start the query builder
+        $users = $UserModel->select('id', 'name', 'staff_id', 'email','user_type', 'hourly_charges', 'created_at')->orderby('created_at', 'desc')->get();
+        $users->transform(function ($user) {
+            $user->user_type = ucfirst(str_replace('_', ' ', $user->user_type));
+            return $user;
+        });
+
+        $users->transform(function ($user) {
+            $user->hourly_charges =  '₹ '. $user->hourly_charges;
+            return $user;
+        });
+
+        $usersLists = User::select('id', 'name', 'staff_id','user_type', 'email')->orderby('name', 'asc')->get();$usersLists->transform(function ($userList) {
+            $userList->user_type = ucfirst(str_replace('_', ' ', $userList->user_type));
+            return $userList;
+        });
+
+
+        $filename = 'users_export_' . date('Ymd_His') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];  
+        $columns = ['ID', 'Name', 'Staff ID', 'Email', 'User Type', 'Hourly Charges', 'Created At'];
+
+        $dir = public_path('users_'.DIRECTORY_SEPARATOR.date('Ymd'));
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0775, true);
+        }
+
+        $filename = $dir . DIRECTORY_SEPARATOR . 'users_'.date('Ymd_His').'.csv';
+        $fileURL = 'users_/' . date('Ymd') . '/' . 'users_'.date('Ymd_His').'.csv';   
+
+        // Create and write the CSV file
+        $file = fopen($filename, 'w+');
+        fwrite($file, "\xEF\xBB\xBF");
+        fputcsv($file, $columns);
+
+        foreach ($users as $user) {
+            $row = [
+                $user->id,
+                $user->name,
+                $user->staff_id,
+                $user->email,
+                $user->user_type,
+                $user->hourly_charges,
+                $user->created_at,
+            ];
+            fputcsv($file, $row);
+        }
+        fclose($file);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'CSV generated successfully.',
+            'file' => $filename,
+            'file_url' => asset($fileURL),
+            
+        ]);
+    }   
 }

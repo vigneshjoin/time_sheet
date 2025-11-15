@@ -29,7 +29,15 @@
 					<a href="javascript:void(0);" class="" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Collapse" id="collapse-header">
 						<i class="ti ti-chevrons-up"></i>
 					</a>
+
+					<!-- Export button -->
+				<a href="javascript:void(0);" id="export_btn" data-action_url="{{ route('admin.projects.export') }}" class="btn-secondary d-flex align-items-center">
+					<i class="ti ti-file-export me-2"></i>
+				</a>
+
 				</div> 
+
+				
 			</div>
 		@endif
 	@endsection

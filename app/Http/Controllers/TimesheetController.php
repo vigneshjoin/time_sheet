@@ -369,7 +369,7 @@ class TimesheetController extends Controller
 
         // Prepare CSV content with derived totals
         $csvHeader = [
-            'ID',
+            'S.no',
             'Project ID',
             // 'User ID',
             'User Name',
@@ -382,14 +382,14 @@ class TimesheetController extends Controller
             'Project Status',
         ];
 
-        $csvData = [];
+        $csvData = [];$serial = 1;
         foreach ($Timesheet as $item) {
             $hourly = (float) ($item->hourly_charges ?? 0);
             $hours  = (float) ($item->hours_spent ?? 0);
             $total  = $hourly * $hours;
 
             $csvData[] = [
-                $item->id,
+                $serial++,
                 $item->project_id,
                 // $item->user_id,
                 $item->user_name,

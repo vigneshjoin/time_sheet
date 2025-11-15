@@ -270,7 +270,7 @@ class UsersController extends Controller
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ];  
-        $columns = ['ID', 'Name', 'Staff ID', 'Email', 'User Type', 'Hourly Charges', 'Created At'];
+        $columns = ['S.no', 'Name', 'Staff ID', 'Email', 'User Type', 'Hourly Charges', 'Created At'];
 
         $dir = public_path('users_'.DIRECTORY_SEPARATOR.date('Ymd'));
         if (!is_dir($dir)) {
@@ -284,10 +284,10 @@ class UsersController extends Controller
         $file = fopen($filename, 'w+');
         fwrite($file, "\xEF\xBB\xBF");
         fputcsv($file, $columns);
-
+        $serial = 1;
         foreach ($users as $user) {
             $row = [
-                $user->id,
+                $serial++,
                 $user->name,
                 $user->staff_id,
                 $user->email,

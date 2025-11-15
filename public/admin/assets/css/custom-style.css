@@ -1,0 +1,25 @@
+/*Custom CSS*/
+.header .dropdown-menu {
+    min-width: 220px;
+}
+.head-icons a.active, .head-icons a:hover{
+	background:#034A8F;
+}
+.btn.btn-primary, .btn.btn-primary:hover, [data-color=primary] .btn-check:checked + .btn, [data-color=primary] .btn.active, [data-color=primary] .btn.show, [data-color=primary] .btn.show:hover, [data-color=primary] .btn:first-child:active, [data-color=primary] :not(.btn-check) + .btn:active{
+	background:#72E704;
+	border: 1px solid #72E704;
+}
+.btn.btn-secondary, .btn.btn-secondary:hover, .btn.btn-info-light:focus, .btn.btn-info-light:active, [data-color=primary] .dataTables_paginate .pagination li.active a.page-link{
+    background-color: #034A8F;
+    border: 1px solid #034A8F;
+}
+[data-color=primary] .header .header-user .user-menu .profile-dropdown .dropdown-item:hover, [data-color=primary] .table tbody tr td a:hover {
+    color: #034A8F;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover, li.paginate_button.page-item.active {
+    background: transparent;
+    border: transparent !important;
+}
+::selection {
+    background: #034A8F !important;
+}
